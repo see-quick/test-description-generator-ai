@@ -63,7 +63,7 @@ public class NetworkPoliciesST extends AbstractST {
     private static final Logger LOGGER = LogManager.getLogger(NetworkPoliciesST.class);
 
     @IsolatedTest("Specific Cluster Operator for test case")
-    @TestDoc(description = @Desc(value = "Start delimiter not found"), steps = { @Step(value = "Start delimiter not found", expected = "Start delimiter not found") }, useCases = {}, tags = {})
+    @TestDoc(description = @Desc("Test ensuring that NetworkPolicy generation is properly influenced by environment variables."), contact = @Contact(name = "Test Author", email = "test.author@example.com"), steps = { @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected") }, useCases = { @UseCase(id = "id") }, tags = { @TestTag(value = "value"), @TestTag(value = "value") })
     void testNPWhenOperatorIsInDifferentNamespaceThanOperand() {
         assumeTrue(!Environment.isHelmInstall() && !Environment.isOlmInstall());
         final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
@@ -84,7 +84,17 @@ public class NetworkPoliciesST extends AbstractST {
     @IsolatedTest("Specific Cluster Operator for test case")
     @Tag(CRUISE_CONTROL)
     @SkipDefaultNetworkPolicyCreation("NetworkPolicy generation from CO is disabled in this test, resulting in problems with connection" + " in case of that DENY ALL global NetworkPolicy is used")
-    @TestDoc(description = @Desc(value = "Start delimiter not found"), steps = { @Step(value = "Start delimiter not found", expected = "Start delimiter not found") }, useCases = {}, tags = {})
+    @Desc("Test ensuring that NetworkPolicy generation is properly influenced by environment variables.")
+    @Contact(name = "Test Author", email = "test.author@example.com")
+    @Step(value = "value", expected = "expected")
+    @Step(value = "value", expected = "expected")
+    @Step(value = "value", expected = "expected")
+    @Step(value = "value", expected = "expected")
+    @Step(value = "value", expected = "expected")
+    @Step(value = "value", expected = "expected")
+    @UseCases(id = "id")
+    @Tags(value = "value", value = "value")
+    @TestDoc(description = @Desc("Test ensuring that NetworkPolicy generation is properly influenced by environment variables."), contact = @Contact(name = "Test Author", email = "test.author@example.com"), steps = { @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected"), @Step(value = "value", expected = "expected") }, useCases = { @UseCase(id = "id") }, tags = { @TestTag(value = "value"), @TestTag(value = "value") })
     void testNPGenerationEnvironmentVariable() {
         assumeTrue(!Environment.isHelmInstall() && !Environment.isOlmInstall());
         final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());

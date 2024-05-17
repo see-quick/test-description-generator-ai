@@ -152,22 +152,25 @@ public class JavadocTestGenerator {
 
     private static class MethodVisitor extends VoidVisitorAdapter<Void> {
         @Override
-        public void visit(MethodDeclaration n, Void arg) {
-            if (isTestMethod(n)) {
+        public void visit(MethodDeclaration methodDeclaration, Void arg) {
+            if (isTestMethod(methodDeclaration)) {
                 // 1st part we input method part into OpenAI API request
-                final String response = generateDocumentation(n.toString());
+                final String response = generateDocumentation(methodDeclaration.toString());
 
                 // 2nd part we receive response from OpenAI API
                 System.out.println("OUTPUT (length: " + response.length() + ")");
                 System.out.println(response);
 
-                // here should be parser
+                // 3rd parse the out from OpenAI API to correct the scheme
                 ParseTree tree = parseResponse(response);
-                System.out.println(tree.toStringTree());
 
-                addCustomAnnotations(n);
+                // 4th go with visitor and build annotation
+                AnnotationApplierVisitor visitor = new AnnotationApplierVisitor(methodDeclaration);
+                visitor.visit(tree); // Apply the annotations to the method based on the parse tree (// This line applies the parsed annotations to the method)
+
+                System.out.println(tree.toStringTree());
             }
-            super.visit(n, arg);
+            super.visit(methodDeclaration, arg);
         }
 
         public static ParseTree parseResponse(String response) {
@@ -195,122 +198,6 @@ public class JavadocTestGenerator {
                 System.err.println("Error parsing response: " + e.getMessage());
                 throw new RuntimeException(e);  // or handle more gracefully
             }
-        }
-
-        private void addCustomAnnotations(MethodDeclaration n) {
-//            TestDocDetails details = TestDocDetails.fetchDocumentationDetails(n.getNameAsString());
-
-            // Check if @TestDoc annotation already exists
-//            Optional<AnnotationExpr> existingAnnotation = n.getAnnotationByName("TestDoc");
-//            // Remove the existing @TestDoc annotation
-//            existingAnnotation.ifPresent(n.getAnnotations()::remove);
-//
-//            NormalAnnotationExpr testDocAnnotation = new NormalAnnotationExpr();
-//            testDocAnnotation.setName("TestDoc");
-//
-//            // Create @Desc annotation for the description
-//            NormalAnnotationExpr descAnnotation = new NormalAnnotationExpr();
-//            descAnnotation.setName("Desc");
-//            descAnnotation.addPair("value", new StringLiteralExpr(details.getDescription()));
-//
-//            testDocAnnotation.addPair("description", descAnnotation);
-//
-//            ArrayInitializerExpr stepsArray = new ArrayInitializerExpr();
-//            stepsArray.setValues(NodeList.nodeList(
-//                Arrays.stream(details.getSteps()).map(step -> createStep(step, "Expected result for " + step)).toArray(NormalAnnotationExpr[]::new)
-//            ));
-//
-//            testDocAnnotation.addPair("steps", stepsArray);
-//
-//            ArrayInitializerExpr useCasesArray = new ArrayInitializerExpr();
-//            useCasesArray.setValues(NodeList.nodeList(
-//                Arrays.stream(details.getUseCases()).map(this::createUseCase).toArray(NormalAnnotationExpr[]::new)
-//            ));
-//
-//            testDocAnnotation.addPair("useCases", useCasesArray);
-//
-//            ArrayInitializerExpr tagsArray = new ArrayInitializerExpr();
-//            tagsArray.setValues(NodeList.nodeList(
-//                Arrays.stream(details.getTags()).map(this::createTag).toArray(NormalAnnotationExpr[]::new)
-//            ));
-//
-//            testDocAnnotation.addPair("tags", tagsArray);
-//
-//            n.addAnnotation(testDocAnnotation);
-        }
-
-
-//        private void addCustomAnnotations(MethodDeclaration n) {
-//            // Check if @TestDoc annotation already exists
-//            Optional<AnnotationExpr> existingAnnotation = n.getAnnotationByName("TestDoc");
-//            // Remove the existing @TestDoc annotation
-//            existingAnnotation.ifPresent(annotationExpr -> n.getAnnotations().remove(annotationExpr));
-//
-//            NormalAnnotationExpr testDocAnnotation = new NormalAnnotationExpr();
-//            testDocAnnotation.setName("TestDoc");
-//
-//            // Create @Desc annotation for the description
-//            NormalAnnotationExpr descAnnotation = new NormalAnnotationExpr();
-//            descAnnotation.setName("Desc");
-//            descAnnotation.addPair("value", new StringLiteralExpr("This test case verifies common behaviour of Pod Security profiles."));
-//
-//            // Add @Desc annotation to the TestDoc annotation
-//            testDocAnnotation.addPair("description", descAnnotation);
-//
-//            ArrayInitializerExpr stepsArray = new ArrayInitializerExpr();
-//            stepsArray.setValues(NodeList.nodeList(
-//                createStep("Add restricted security profile to the namespace containing all resources, by applying according label", "Namespace is modified"),
-//                createStep("Deploy 3 Kafka Clusters, of which 2 will serve as targets and one as a source and for other purposes", "Kafka clusters are deployed"),
-//                createStep("Deploy all additional Operands which are to be tested, i.e., KafkaMirrorMaker, KafkaMirrorMaker2, KafkaBridge, KafkaConnect, KafkaConnector.", "All components are deployed targeting respective Kafka Clusters"),
-//                createStep("Deploy producer which will produce data into Topic residing in Kafka Cluster serving as Source for KafkaMirrorMakers and is targeted by other Operands", "Messages are sent into KafkaTopic"),
-//                createStep("Verify that containers such as Kafka, ZooKeeper, Entity Operator, KafkaBridge has properly set .securityContext", "All containers and Pods have expected properties"),
-//                createStep("Verify KafkaConnect and KafkaConnector are working by checking presence of Data in file targeted by FileSink KafkaConnector", "Data are present here"),
-//                createStep("Verify Kafka and MirrorMakers by Deploy kafka Consumers in respective target Kafka Clusters targeting KafkaTopics created by mirroring", "Data are present here"),
-//                createStep("Deploy Kafka consumer with invalid configuration regarding, i.e., without pod security profile", "Consumer is unable to communicate correctly with Kafka")
-//            ));
-//
-//            testDocAnnotation.addPair("steps", stepsArray);
-//
-//            // Set the use cases
-//            ArrayInitializerExpr useCasesArray = new ArrayInitializerExpr();
-//            useCasesArray.setValues(NodeList.nodeList(
-//                createUseCase("core"),
-//                createUseCase("core+"),
-//                createUseCase("core+++")
-//            ));
-//            testDocAnnotation.addPair("useCases", useCasesArray);
-//
-//            // Set the tags
-//            ArrayInitializerExpr tagsArray = new ArrayInitializerExpr();
-//            tagsArray.setValues(NodeList.nodeList(
-//                createTag("default"),
-//                createTag("regression")
-//            ));
-//            testDocAnnotation.addPair("tags", tagsArray);
-//
-//            n.addAnnotation(testDocAnnotation);
-//        }
-
-        private NormalAnnotationExpr createStep(String value, String expected) {
-            NormalAnnotationExpr stepAnnotation = new NormalAnnotationExpr();
-            stepAnnotation.setName("Step");
-            stepAnnotation.addPair("value", new StringLiteralExpr(value));
-            stepAnnotation.addPair("expected", new StringLiteralExpr(expected));
-            return stepAnnotation;
-        }
-
-        private NormalAnnotationExpr createUseCase(String id) {
-            NormalAnnotationExpr useCaseAnnotation = new NormalAnnotationExpr();
-            useCaseAnnotation.setName("UseCase");
-            useCaseAnnotation.addPair("id", new StringLiteralExpr(id));
-            return useCaseAnnotation;
-        }
-
-        private NormalAnnotationExpr createTag(String value) {
-            NormalAnnotationExpr tagAnnotation = new NormalAnnotationExpr();
-            tagAnnotation.setName("TestTag");
-            tagAnnotation.addPair("value", new StringLiteralExpr(value));
-            return tagAnnotation;
         }
 
         private boolean isTestMethod(MethodDeclaration n) {
