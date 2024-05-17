@@ -19,8 +19,7 @@ public class TestDocGrammarParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, LETTERS=23, DIGITS=24, 
-		SPECIAL_CHARACTERS=25, WS=26, STRING=27;
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, WS=23, STRING=24, NUMBER=25;
 	public static final int
 		RULE_testDocAnnotation = 0, RULE_testDocBody = 1, RULE_testDocAttribute = 2, 
 		RULE_descriptionAttribute = 3, RULE_contactAttribute = 4, RULE_contactBody = 5, 
@@ -47,8 +46,8 @@ public class TestDocGrammarParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, null, null, null, "LETTERS", 
-			"DIGITS", "SPECIAL_CHARACTERS", "WS", "STRING"
+			null, null, null, null, null, null, null, null, null, null, null, "WS", 
+			"STRING", "NUMBER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -867,7 +866,7 @@ public class TestDocGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u001b\u0083\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u0019\u0083\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
 		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
 		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b"+
@@ -904,12 +903,12 @@ public class TestDocGrammarParser extends Parser {
 		"*\'\u0001\u0000\u0000\u0000*(\u0001\u0000\u0000\u0000*)\u0001\u0000\u0000"+
 		"\u0000+\u0005\u0001\u0000\u0000\u0000,-\u0005\u0005\u0000\u0000-.\u0005"+
 		"\u0006\u0000\u0000./\u0005\u0007\u0000\u0000/0\u0005\u0002\u0000\u0000"+
-		"01\u0005\u001b\u0000\u000012\u0005\u0003\u0000\u00002\u0007\u0001\u0000"+
+		"01\u0005\u0018\u0000\u000012\u0005\u0003\u0000\u00002\u0007\u0001\u0000"+
 		"\u0000\u000034\u0005\b\u0000\u000045\u0005\u0006\u0000\u000056\u0005\t"+
 		"\u0000\u000067\u0005\u0002\u0000\u000078\u0003\n\u0005\u000089\u0005\u0003"+
 		"\u0000\u00009\t\u0001\u0000\u0000\u0000:;\u0005\n\u0000\u0000;<\u0005"+
-		"\u0006\u0000\u0000<=\u0005\u001b\u0000\u0000=>\u0005\u0004\u0000\u0000"+
-		">?\u0005\u000b\u0000\u0000?@\u0005\u0006\u0000\u0000@A\u0005\u001b\u0000"+
+		"\u0006\u0000\u0000<=\u0005\u0018\u0000\u0000=>\u0005\u0004\u0000\u0000"+
+		">?\u0005\u000b\u0000\u0000?@\u0005\u0006\u0000\u0000@A\u0005\u0018\u0000"+
 		"\u0000A\u000b\u0001\u0000\u0000\u0000BC\u0005\f\u0000\u0000CD\u0005\u0006"+
 		"\u0000\u0000DE\u0005\r\u0000\u0000EJ\u0003\u000e\u0007\u0000FG\u0005\u0004"+
 		"\u0000\u0000GI\u0003\u000e\u0007\u0000HF\u0001\u0000\u0000\u0000IL\u0001"+
@@ -917,8 +916,8 @@ public class TestDocGrammarParser extends Parser {
 		"KM\u0001\u0000\u0000\u0000LJ\u0001\u0000\u0000\u0000MN\u0005\u000e\u0000"+
 		"\u0000N\r\u0001\u0000\u0000\u0000OP\u0005\u000f\u0000\u0000PQ\u0005\u0002"+
 		"\u0000\u0000QR\u0005\u0010\u0000\u0000RS\u0005\u0006\u0000\u0000ST\u0005"+
-		"\u001b\u0000\u0000TU\u0005\u0004\u0000\u0000UV\u0005\u0011\u0000\u0000"+
-		"VW\u0005\u0006\u0000\u0000WX\u0005\u001b\u0000\u0000XY\u0005\u0003\u0000"+
+		"\u0018\u0000\u0000TU\u0005\u0004\u0000\u0000UV\u0005\u0011\u0000\u0000"+
+		"VW\u0005\u0006\u0000\u0000WX\u0005\u0018\u0000\u0000XY\u0005\u0003\u0000"+
 		"\u0000Y\u000f\u0001\u0000\u0000\u0000Z[\u0005\u0012\u0000\u0000[\\\u0005"+
 		"\u0006\u0000\u0000\\]\u0005\r\u0000\u0000]b\u0003\u0012\t\u0000^_\u0005"+
 		"\u0004\u0000\u0000_a\u0003\u0012\t\u0000`^\u0001\u0000\u0000\u0000ad\u0001"+
@@ -926,7 +925,7 @@ public class TestDocGrammarParser extends Parser {
 		"ce\u0001\u0000\u0000\u0000db\u0001\u0000\u0000\u0000ef\u0005\u000e\u0000"+
 		"\u0000f\u0011\u0001\u0000\u0000\u0000gh\u0005\u0013\u0000\u0000hi\u0005"+
 		"\u0002\u0000\u0000ij\u0005\u0014\u0000\u0000jk\u0005\u0006\u0000\u0000"+
-		"kl\u0005\u001b\u0000\u0000lm\u0005\u0003\u0000\u0000m\u0013\u0001\u0000"+
+		"kl\u0005\u0018\u0000\u0000lm\u0005\u0003\u0000\u0000m\u0013\u0001\u0000"+
 		"\u0000\u0000no\u0005\u0015\u0000\u0000op\u0005\u0006\u0000\u0000pq\u0005"+
 		"\r\u0000\u0000qv\u0003\u0016\u000b\u0000rs\u0005\u0004\u0000\u0000su\u0003"+
 		"\u0016\u000b\u0000tr\u0001\u0000\u0000\u0000ux\u0001\u0000\u0000\u0000"+
@@ -934,7 +933,7 @@ public class TestDocGrammarParser extends Parser {
 		"\u0000xv\u0001\u0000\u0000\u0000yz\u0005\u000e\u0000\u0000z\u0015\u0001"+
 		"\u0000\u0000\u0000{|\u0005\u0016\u0000\u0000|}\u0005\u0002\u0000\u0000"+
 		"}~\u0005\u0010\u0000\u0000~\u007f\u0005\u0006\u0000\u0000\u007f\u0080"+
-		"\u0005\u001b\u0000\u0000\u0080\u0081\u0005\u0003\u0000\u0000\u0081\u0017"+
+		"\u0005\u0018\u0000\u0000\u0080\u0081\u0005\u0003\u0000\u0000\u0081\u0017"+
 		"\u0001\u0000\u0000\u0000\u0005\"*Jbv";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
