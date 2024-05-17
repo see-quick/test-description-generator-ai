@@ -65,9 +65,9 @@ public class AnnotationApplierVisitor extends TestDocGrammarBaseVisitor<Expressi
     public Expression visitStepsAttribute(TestDocGrammarParser.StepsAttributeContext ctx) {
         NodeList<Expression> steps = new NodeList<>();
         ctx.step().forEach(step -> {
-            // Assuming STRING for value is the third child (index 2), expected is the seventh child (index 6)
-            String value = step.getChild(2).getText().replace("\"", "");
-            String expected = step.getChild(6).getText().replace("\"", "");
+            // Assuming STRING for value is the third child (index 4), expected is the seventh child (index 8)
+            String value = step.getChild(4).getText().replace("\"", "");
+            String expected = step.getChild(8).getText().replace("\"", "");
             steps.add(new NormalAnnotationExpr(new Name("Step"), new NodeList<>(
                 new MemberValuePair("value", new StringLiteralExpr(value)),
                 new MemberValuePair("expected", new StringLiteralExpr(expected))
@@ -80,7 +80,7 @@ public class AnnotationApplierVisitor extends TestDocGrammarBaseVisitor<Expressi
     public Expression visitUseCasesAttribute(TestDocGrammarParser.UseCasesAttributeContext ctx) {
         NodeList<Expression> useCases = new NodeList<>();
         ctx.useCase().forEach(useCase -> {
-            String id = useCase.getChild(2).getText().replace("\"", ""); // assuming id is directly a STRING
+            String id = useCase.getChild(4).getText().replace("\"", ""); // assuming id is directly a STRING
             useCases.add(new NormalAnnotationExpr(new Name("UseCase"), new NodeList<>(new MemberValuePair("id", new StringLiteralExpr(id)))));
         });
         return new ArrayInitializerExpr(useCases);
@@ -90,7 +90,7 @@ public class AnnotationApplierVisitor extends TestDocGrammarBaseVisitor<Expressi
     public Expression visitTagsAttribute(TestDocGrammarParser.TagsAttributeContext ctx) {
         NodeList<Expression> tags = new NodeList<>();
         ctx.testTag().forEach(tag -> {
-            String value = tag.getChild(2).getText().replace("\"", ""); // assuming value is directly a STRING
+            String value = tag.getChild(4).getText().replace("\"", ""); // assuming value is directly a STRING
             tags.add(new NormalAnnotationExpr(new Name("TestTag"), new NodeList<>(new MemberValuePair("value", new StringLiteralExpr(value)))));
         });
         return new ArrayInitializerExpr(tags);
