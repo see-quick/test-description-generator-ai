@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" afterDir="false" />
     </list>
@@ -127,16 +128,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="AnnotationsApplierVisitorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="test-description-generator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.see.quick.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="io.see.quick" />
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.AnnotationsApplierVisitorTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.JavadocTestGenerator (1)" />
       <item itemvalue="Application.BatchJavadocGenerator" />
       <item itemvalue="Application.CodeParser" />
       <item itemvalue="Application.JavadocTestGenerator" />
+      <item itemvalue="JUnit.AnnotationsApplierVisitorTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.JavadocTestGenerator" />
         <item itemvalue="Application.JavadocTestGenerator (1)" />
+        <item itemvalue="JUnit.AnnotationsApplierVisitorTest" />
         <item itemvalue="Application.CodeParser" />
         <item itemvalue="Application.BatchJavadocGenerator" />
       </list>
@@ -179,7 +197,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>173</line>
+          <line>177</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
