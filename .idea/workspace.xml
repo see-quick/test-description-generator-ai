@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +195,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>191</line>
+          <line>189</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

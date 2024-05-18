@@ -32,30 +32,28 @@ public class JavadocTestGenerator {
     private static OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"));
 
     private static String EBNFGrammarOfTestMethod = """
-            TestDocAnnotation ::= '@TestDoc' '(' TestDocBody ')'
-            TestDocBody ::= TestDocAttribute { ',' TestDocAttribute }
-            TestDocAttribute ::= DescriptionAttribute
-                               | ContactAttribute
-                               | StepsAttribute
-                               | UseCasesAttribute
-                               | TagsAttribute
-            DescriptionAttribute ::= 'description' '=' '@Desc' '(' String ')'
-            ContactAttribute ::= 'contact' '=' '@Contact' '(' ContactBody ')'
-            ContactBody ::= 'name' '=' String ',' 'email' '=' String
-            StepsAttribute ::= 'steps' '=' '{' Step { ',' Step } '}'
-            Step ::= '@Step' '(' 'value' '=' String ',' 'expected' '=' String ')'
-            UseCasesAttribute ::= 'useCases' '=' '{' UseCase { ',' UseCase } '}'
-            UseCase ::= '@UseCase' '(' 'id' '=' String ')'
-            TagsAttribute ::= 'tags' '=' '{' TestTag { ',' TestTag } '}'
-            TestTag ::= '@TestTag' '(' 'value' '=' String ')'
-            String ::= '"' characters '"'
-            characters ::= character { character }
-            character ::= letter | digit | special_characters
-            letter ::= 'A' | 'B' | ... | 'a' | 'b' | ... | 'z'
-            digit ::= '0' | '1' | ... | '9'
-            special_characters ::= space | punctuation | ...
-            space ::= ' '
-            punctuation ::= '.' | ',' | '!' | ...
+            // Lexer rules
+            WS              : [ \\t\\r\\n]+ -> skip;
+            STRING          : '"' (~["\\\\])* '"';
+            NUMBER          : [0-9]+;
+            // Parser rules
+            testDocAnnotation : '@TestDoc' '(' testDocBody ')';
+            testDocBody       : testDocAttribute ( ',' testDocAttribute )* ;
+            testDocAttribute  : descriptionAttribute
+                              | contactAttribute
+                              | stepsAttribute
+                              | useCasesAttribute
+                              | tagsAttribute
+                              ;
+            descriptionAttribute : 'description' '=' '@Desc' '(' STRING ')';
+            contactAttribute     : 'contact' '=' '@Contact' '(' contactBody ')';
+            contactBody          : 'name' '=' STRING ',' 'email' '=' STRING;
+            stepsAttribute       : 'steps' '=' '{' step ( ',' step )* '}';
+            step                 : '@Step' '(' 'value' '=' STRING ',' 'expected' '=' STRING ')';
+            useCasesAttribute    : 'useCases' '=' '{' useCase ( ',' useCase )* '}';
+            useCase              : '@UseCase' '(' 'id' '=' STRING ')';
+            tagsAttribute        : 'tags' '=' '{' testTag ( ',' testTag )* '}';
+            testTag              : '@TestTag' '(' 'value' '=' STRING ')';
         """;
 
     private static final String exampleENBFGrammarOfTestMethod = """
