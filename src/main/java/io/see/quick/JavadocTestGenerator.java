@@ -28,9 +28,9 @@ import java.util.List;
 
 public class JavadocTestGenerator {
 
-    private static OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"));
+    private static final OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"));
 
-    private static String EBNFGrammarOfTestMethod = """
+    private static final String EBNFGrammarOfTestMethod = """
             // Lexer rules
             WS              : [ \\t\\r\\n]+ -> skip;
             STRING          : '"' (~["\\\\])* '"';
