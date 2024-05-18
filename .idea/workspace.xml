@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" afterDir="false" />
     </list>
@@ -197,7 +196,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>177</line>
+          <line>191</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
