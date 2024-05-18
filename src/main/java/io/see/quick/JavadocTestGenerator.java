@@ -23,12 +23,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
 public class JavadocTestGenerator {
 
-    private static final OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"));
+    private static final OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"), Duration.ofMinutes(30));
 
     private static final String EBNFGrammarOfTestMethod = """
             // Lexer rules
@@ -72,8 +73,9 @@ public class JavadocTestGenerator {
                 },
                 tags = {
                         @TestTag(value = "default"),
-                        @TestTag(value = "regression"),
+                        @TestTag(value = "regression")
                 }
+            )
         """ ;
 
     private static String generateDocumentation(final String codeSnippet, final String possibleAuthor,
