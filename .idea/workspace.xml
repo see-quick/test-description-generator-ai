@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/utils/GitUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/utils/GitUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" afterDir="false" />
-    </list>
+    <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -197,7 +192,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>189</line>
+          <line>192</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
