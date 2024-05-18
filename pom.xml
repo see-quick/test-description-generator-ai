@@ -119,7 +119,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.see.quick.MainClass</mainClass>  <!-- Replace with your main class -->
+                            <mainClass>io.see.quick.JavadocTestGenerator</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
