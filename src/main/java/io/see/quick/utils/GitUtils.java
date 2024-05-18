@@ -40,6 +40,47 @@ public class GitUtils {
         return "Unknown Author";
     }
 
+    public static String getAuthorEmail(String filePath, int lineNumber) {
+        try {
+            Process process = Runtime.getRuntime().exec(
+                "git blame -e -L " + lineNumber + "," + lineNumber + " -- " + filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = reader.readLine();
+            if (line != null) {
+                // The email is typically enclosed in <>, extract it
+                int emailStart = line.indexOf('<');
+                int emailEnd = line.indexOf('>', emailStart);
+                if (emailStart != -1 && emailEnd != -1) {
+                    return line.substring(emailStart + 1, emailEnd);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "email_not_found";
+    }
+
+    public static String[] getAuthorAndEmail(String filePath, int lineNumber) {
+        String[] authorDetails = new String[2]; // Array to hold author name and email
+        try {
+            Process process = Runtime.getRuntime().exec(
+                "git blame --line-porcelain -L " + lineNumber + "," + lineNumber + " -- " + filePath);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("author ")) {
+                    authorDetails[0] = line.substring(7).trim(); // Extract author name
+                } else if (line.startsWith("author-mail ")) {
+                    authorDetails[1] = line.substring(12).trim().replace("<", "").replace(">", ""); // Extract author email
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[]{"Unknown Author", "email_not_found"};
+        }
+        return authorDetails;
+    }
+
     public static String getAuthorEmailByName(String authorName) {
         return authorEmailMap.getOrDefault(authorName, "email_not_found@example.com");
     }
