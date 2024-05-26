@@ -252,7 +252,7 @@ public class JavadocTestGenerator {
             String formattedAnnotation = "@TestDoc(\n";
 
             // Description formatting
-            formattedAnnotation += formatSection(foundAnnotation, "description", ",\n");
+            formattedAnnotation += formatDescription(foundAnnotation);
 
             // Contact formatting, ensuring it remains on one line
             formattedAnnotation += formatContact(foundAnnotation);
@@ -266,7 +266,7 @@ public class JavadocTestGenerator {
             // Tags formatting, one line each
             formattedAnnotation += formatSection(foundAnnotation, "tags", "\n");
 
-            formattedAnnotation += ")"; // Close the TestDoc annotation
+            formattedAnnotation += "\t)"; // Close the TestDoc annotation
 
             // Replace the original annotation in the code with the formatted version
             m.appendReplacement(sb, Matcher.quoteReplacement(formattedAnnotation));
@@ -274,6 +274,19 @@ public class JavadocTestGenerator {
         m.appendTail(sb); // Add the remainder of the input sequence
 
         return sb.toString();
+    }
+
+    private static String formatDescription(String text) {
+        String regex = "description = @(Desc\\(\".*?\"\\))";
+        Pattern p = Pattern.compile(regex, Pattern.DOTALL);
+        Matcher m = p.matcher(text);
+
+        if (m.find()) {
+            String content = m.group(1).trim();  // Capture the content including the @Desc annotation
+            // Properly format and return the description line
+            return "\tdescription = " + content + ",\n";
+        }
+        return "";  // Return empty if no match is found
     }
 
     private static String formatSection(String text, String key, String endDelimiter) {
@@ -302,20 +315,28 @@ public class JavadocTestGenerator {
     }
 
     private static String formatSteps(String text) {
-        String regex = "steps = \\{(.*?)\\}";
+        String regex = "steps = \\{([^}]*)\\}";
         Pattern p = Pattern.compile(regex, Pattern.DOTALL);
         Matcher m = p.matcher(text);
         if (m.find()) {
             String steps = m.group(1).trim();
+            // Split steps properly, handle comma after `expected` value
             steps = Arrays.stream(steps.split("@Step"))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .map(s -> "@Step" + s.replaceAll(", expected", " expected"))
-                .collect(Collectors.joining(",\n\t\t"));
+                .map(s -> "@Step" + s
+                    .replaceAll("expected =", "expected =")  // Ensure '=' is formatted correctly
+                    .replaceFirst("value =", "value =")       // Ensure 'value =' is correctly formatted
+                    .replaceAll(",\\s*expected", ", expected") // Correctly format spacing after comma
+                    .trim())
+                .collect(Collectors.joining(",\n\t\t"));  // Join steps with a comma and correct formatting
+            // Remove trailing comma if it exists after the last step
+            if (steps.endsWith(",,")) {
+                steps = steps.substring(0, steps.length() - 2);
+            }
             return "\tsteps = {\n\t\t" + steps + "\n\t},\n";
         }
         return "";
     }
-
 
 }
