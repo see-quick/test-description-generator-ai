@@ -59,6 +59,9 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="io.see.quick" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.JavadocTestGenerator">
     <configuration name="BatchJavadocGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
