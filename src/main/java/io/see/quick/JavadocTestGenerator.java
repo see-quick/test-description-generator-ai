@@ -277,14 +277,14 @@ public class JavadocTestGenerator {
     }
 
     private static String formatDescription(String text) {
-        String regex = "description = @(Desc\\(\".*?\"\\))";
+        String regex = "description = (@Desc\\(\".*?\"\\))";
         Pattern p = Pattern.compile(regex, Pattern.DOTALL);
         Matcher m = p.matcher(text);
 
         if (m.find()) {
             String content = m.group(1).trim();  // Capture the content including the @Desc annotation
             // Properly format and return the description line
-            return "\tdescription = " + content + ",\n";
+            return "\t\tdescription = " + content + ",\n";
         }
         return "";  // Return empty if no match is found
     }
@@ -297,19 +297,19 @@ public class JavadocTestGenerator {
             String content = m.group(1).trim();
             content = Arrays.stream(content.split(","))
                 .map(String::trim)
-                .collect(Collectors.joining(",\n\t\t"));
-            return "\t" + key + " = {\n\t\t" + content + "\n\t}" + endDelimiter;
+                .collect(Collectors.joining(",\n\t\t\t"));
+            return "\t\t" + key + " = {\n\t\t\t" + content + "\n\t\t}" + endDelimiter;
         }
         return "";
     }
 
     private static String formatContact(String text) {
-        String regex = "contact = (\\{.*?\\})";
+        String regex = "contact = (@Contanct\\{.*?\\})";
         Pattern p = Pattern.compile(regex, Pattern.DOTALL);
         Matcher m = p.matcher(text);
         if (m.find()) {
             String content = m.group(1).replaceAll("\n", "").replaceAll("\\s+", " ");
-            return "\tcontact = " + content + ",\n";
+            return "\t\tcontact = " + content + ",\n";
         }
         return "";
     }
@@ -324,17 +324,10 @@ public class JavadocTestGenerator {
             steps = Arrays.stream(steps.split("@Step"))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .map(s -> "@Step" + s
-                    .replaceAll("expected =", "expected =")  // Ensure '=' is formatted correctly
-                    .replaceFirst("value =", "value =")       // Ensure 'value =' is correctly formatted
-                    .replaceAll(",\\s*expected", ", expected") // Correctly format spacing after comma
-                    .trim())
-                .collect(Collectors.joining(",\n\t\t"));  // Join steps with a comma and correct formatting
-            // Remove trailing comma if it exists after the last step
-            if (steps.endsWith(",,")) {
-                steps = steps.substring(0, steps.length() - 2);
-            }
-            return "\tsteps = {\n\t\t" + steps + "\n\t},\n";
+                .map(s -> "@Step" + s.trim())
+                .collect(Collectors.joining("\n\t\t\t"));  // Join steps with a comma and correct formatting
+
+            return "\t\tsteps = {\n\t\t\t" + steps + "\n\t\t},\n";
         }
         return "";
     }
