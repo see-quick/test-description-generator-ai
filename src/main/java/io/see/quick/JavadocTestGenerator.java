@@ -79,6 +79,10 @@ public class JavadocTestGenerator {
             testTag              : '@TestTag' '(' 'value' '=' STRING ')';
         """;
 
+    private static final String FOUR_SPACES = " ".repeat(4);
+    private static final String EIGHT_SPACES = " ".repeat(8);
+    private static final String TWELVE_SPACES = " ".repeat(12);
+
     private static final String exampleENBFGrammarOfTestMethod = """
             @TestDoc(
                 description = @Desc("Test checking that the application works as expected."),
@@ -283,7 +287,7 @@ public class JavadocTestGenerator {
             // Tags formatting, one line each
             formattedAnnotation += formatSection(foundAnnotation, "tags", "\n");
 
-            formattedAnnotation += "\t)"; // Close the TestDoc annotation
+            formattedAnnotation += FOUR_SPACES + ")"; // Close the TestDoc annotation
 
             // Replace the original annotation in the code with the formatted version
             m.appendReplacement(sb, Matcher.quoteReplacement(formattedAnnotation));
@@ -301,7 +305,7 @@ public class JavadocTestGenerator {
         if (m.find()) {
             String content = m.group(1).trim();  // Capture the content including the @Desc annotation
             // Properly format and return the description line
-            return "\t\tdescription = " + content + ",\n";
+            return EIGHT_SPACES + "description = " + content + ",\n";
         }
         return "";  // Return empty if no match is found
     }
@@ -314,8 +318,8 @@ public class JavadocTestGenerator {
             String content = m.group(1).trim();
             content = Arrays.stream(content.split(","))
                 .map(String::trim)
-                .collect(Collectors.joining(",\n\t\t\t"));
-            return "\t\t" + key + " = {\n\t\t\t" + content + "\n\t\t}" + endDelimiter;
+                .collect(Collectors.joining(",\n" + TWELVE_SPACES));
+            return EIGHT_SPACES + key + " = {\n" + TWELVE_SPACES + content + "\n" + EIGHT_SPACES + "}" + endDelimiter;
         }
         return "";
     }
@@ -328,7 +332,7 @@ public class JavadocTestGenerator {
         if (m.find()) {
             String name = m.group(1).replaceAll("\n", "").replaceAll("\\s+", " ");
             String email = m.group(2).replaceAll("\n", "").replaceAll("\\s+", " ");
-            return "\t\tcontact = @Contact(name = \"" + name + "\", email = \"" + email + "\"),\n";  // Correct indentation and remove excess spacing
+            return EIGHT_SPACES + "contact = @Contact(name = \"" + name + "\", email = \"" + email + "\"),\n";  // Correct indentation and remove excess spacing
         }
         return "";
     }
@@ -344,9 +348,9 @@ public class JavadocTestGenerator {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(s -> "@Step" + s.trim())
-                .collect(Collectors.joining("\n\t\t\t"));  // Join steps with a comma and correct formatting
+                .collect(Collectors.joining("\n" + TWELVE_SPACES));  // Join steps with a comma and correct formatting
 
-            return "\t\tsteps = {\n\t\t\t" + steps + "\n\t\t},\n";
+            return EIGHT_SPACES + "steps = {\n" + TWELVE_SPACES + steps + "\n" + EIGHT_SPACES + "},\n";
         }
         return "";
     }
