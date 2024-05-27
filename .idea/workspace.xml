@@ -63,7 +63,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.JavadocTestGenerator">
+  <component name="RunManager" selected="Application.KafkaNodePoolSTJavadoc">
     <configuration name="BatchJavadocGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="io.see.quick.trying.BatchJavadocGenerator" />
       <module name="test-description-generator" />
@@ -130,6 +130,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KafkaNodePoolSTJavadoc" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocTestGenerator" />
+      <module name="test-description-generator" />
+      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java $PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="AnnotationsApplierVisitorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="test-description-generator" />
       <extension name="coverage">
@@ -146,6 +154,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.KafkaNodePoolSTJavadoc" />
       <item itemvalue="Application.JavadocTestGenerator (1)" />
       <item itemvalue="Application.BatchJavadocGenerator" />
       <item itemvalue="Application.CodeParser" />
@@ -196,6 +205,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/trying/BatchJavadocGenerator.java</url>
           <line>35</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
+          <line>242</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

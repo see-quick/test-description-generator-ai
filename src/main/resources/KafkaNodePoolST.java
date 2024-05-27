@@ -68,7 +68,7 @@ public class KafkaNodePoolST extends AbstractST {
      *  - broker-id-management
      */
     @ParallelNamespaceTest
-    @TestDoc(description = @Desc("This test case verifies the management of broker IDs in Kafka Node Pools using annotations."), contact = @Contact(name = "null", email = "null"), steps = { @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial NodePool (Initial) to hold Topics and act as controller. Kafka instance is deployed according to Kafka and KafkaNodePool custom resource, with IDs 90, 91.", expected = "NodePools are deployed, Initial NodePool contains IDs 90, 91."), @Step(value = "Deploy additional 2 NodePools (A,B) with 1 and 2 replicas, and preset 'next-node-ids' annotations holding reciprocal values ([4],[6]).", expected = "NodePools are deployed, NodePool A contains ID 4, NodePool B contains IDs 0, 6."), @Step(value = "Annotate NodePool A 'next-node-ids' and NodePool B 'remove-node-ids' respectively ([20-21],[6,55]) afterward scale to 4 and 1 replica respectively.", expected = "NodePools are scaled, NodePool A contains IDs 1, 4, 20, 21. NodePool B contains ID 0."), @Step(value = "Annotate NodePool A 'remove-node-ids' and NodePool B 'next-node-ids' respectively ([20],[1]) afterward scale to 2 and 6 replica respectively.", expected = "NodePools are scaled, NodePool A contains IDs 1, 4. NodePool B contains IDs 0, 2, 3, 4, 5, 6.") }, useCases = { @UseCase(id = "kafka-node-pool"), @UseCase(id = "broker-id-management") }, tags = { @TestTag(value = "kafka"), @TestTag(value = "node-pool"), @TestTag(value = "broker-id") })
+    @TestDoc(description = @Desc("This test case verifies the management of broker IDs in Kafka Node Pools using annotations."), contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"), steps = { @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial NodePool (Initial) to hold Topics and act as controller. Kafka instance is deployed according to Kafka and KafkaNodePool custom resource, with IDs 90, 91.", expected = "Kafka instance and Initial NodePool are successfully deployed."), @Step(value = "Deploy additional 2 NodePools (A,B) with 1 and 2 replicas, and preset 'next-node-ids' annotations holding resp. values ([4],[6]). NodePools are deployed, NodePool A contains ID 4, NodePoolB contains Ids 6, 0.", expected = "NodePools A and B are deployed with correct IDs."), @Step(value = "Annotate NodePool A 'next-node-ids' and NodePool B 'remove-node-ids' respectively ([20-21],[6,55]) afterward scale to 4 and 1 replica resp. NodePools are scaled, NodePool A contains IDs 4, 20, 21, 1. NodePool B contains ID 0.", expected = "NodePools A and B are correctly annotated and scaled."), @Step(value = "Annotate NodePool A 'remove-node-ids' and NodePool B 'next-node-ids' respectively ([20],[1]) afterward scale to 2 and 6 replica resp. NodePools are scaled, NodePool A contains IDs 1, 4. NodePool B contains ID 2, 3, 5.", expected = "NodePools A and B are correctly annotated and scaled after the final changes.") }, useCases = { @UseCase(id = "kafka-node-pool"), @UseCase(id = "broker-id-management") }, tags = { @TestTag(value = "default"), @TestTag(value = "regression") })
     void testKafkaNodePoolBrokerIdsManagementUsingAnnotations() {
         final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
         final String nodePoolNameA = testStorage.getBrokerPoolName() + "-a";
@@ -183,23 +183,24 @@ public class KafkaNodePoolST extends AbstractST {
     @ParallelNamespaceTest
     @TestDoc(
 		description = @Desc("This test case verifies changing of roles in Kafka Node Pools."),
-		contact = @Contact(name = "null", email = "null"),
+		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
 		steps = {
-			@Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, both with mixed role, first one stable, second one which will be modified.", expected = "Kafka instance deployed with appropriate Node Pools"),
-			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present.", expected = "KafkaTopic created successfully"),
-			@Step(value = "Annotate one of Node Pools to perform manual Rolling Update and start Rolling Update.", expected = "Rolling Update initiated"),
-			@Step(value = "Change role of Kafka Node Pool from mixed to controller only role.", expected = "Role change prevented due to ongoing Rolling Update and presence of replicas"),
-			@Step(value = "Original Rolling Update finishes successfully.", expected = "Rolling update completed successfully"),
-			@Step(value = "Delete previously created KafkaTopic.", expected = "KafkaTopic deleted, and role change proceeds"),
-			@Step(value = "Change role of Kafka Node Pool from controller only to mixed role.", expected = "Kafka Node Pool role changed to mixed role"),
-			@Step(value = "Produce and consume messages on newly created KafkaTopic with replica count requiring also new brokers to be present.", expected = "Messages produced and consumed successfully")
+			@Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, both with mixed role, first one stable, second one which will be modified.", expected = "Kafka instance with the required Node Pools is deployed."),
+			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present.", expected = "KafkaTopic with the necessary number of replicas is created."),
+			@Step(value = "Annotate one of Node Pools to perform manual Rolling Update.", expected = "Rolling Update started."),
+			@Step(value = "Change role of Kafka Node Pool from mixed to controller only role.", expected = "Role Change is prevented because a previously created KafkaTopic still has some replicas present on the node to be scaled down, also there is original Rolling Update going on."),
+			@Step(value = "Original Rolling Update finishes successfully.", expected = "Rolling Update completes."),
+			@Step(value = "Delete previously created KafkaTopic.", expected = "KafkaTopic is deleted, and role change of Node Pool whose role was changed begins resulting in new nodes with the expected role."),
+			@Step(value = "Change role of Kafka Node Pool from controller only to mixed role.", expected = "Kafka Node Pool changes role to mixed role."),
+			@Step(value = "Produce and consume messages on newly created KafkaTopic with replica count requiring also new brokers to be present.", expected = "Messages are produced and consumed successfully.")
 		},
 		useCases = {
 			@UseCase(id = "kafka-node-pool")
 		},
 		tags = {
 			@TestTag(value = "default"),
-			@TestTag(value = "regression")
+			@TestTag(value = "role-change-test"),
+			@TestTag(value = "kafka")
 		}
 	)
     void testNodePoolsRolesChanging() {
@@ -289,7 +290,7 @@ public class KafkaNodePoolST extends AbstractST {
     @ParallelNamespaceTest
     @TestDoc(
 		description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
-		contact = @Contact(name = "null", email = "null"),
+		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
 		steps = {
 			@Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
 			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
@@ -302,8 +303,7 @@ public class KafkaNodePoolST extends AbstractST {
 			@UseCase(id = "kafka-node-pool")
 		},
 		tags = {
-			@TestTag(value = "kafka"),
-			@TestTag(value = "node-pool"),
+			@TestTag(value = "default"),
 			@TestTag(value = "regression")
 		}
 	)

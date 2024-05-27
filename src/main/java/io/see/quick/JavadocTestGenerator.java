@@ -35,7 +35,24 @@ public class JavadocTestGenerator {
 
     private static final OpenAiService service = new OpenAiService(System.getenv("OPEN_AI_API_KEY"), Duration.ofMinutes(30));
 
-    private static final String TEST_DOC_PATTERN = "@TestDoc\\(([^()]|\\((?:[^()]*)\\))*\\)";
+    /**
+     * Regex pattern to match `@TestDoc` annotations with nested parentheses.
+     *
+     * <p>
+     * The pattern works as follows:
+     * <ul>
+     *   <li><code>@TestDoc\\(</code>: Matches the literal `@TestDoc(`.</li>
+     *   <li><code>(?:[^()]*|\\((?:[^()]*|\\([^()]*\\))*\\))*</code>: A non-capturing group that matches:
+     *     <ul>
+     *       <li><code>[^()]*</code>: Any sequence of characters that are not parentheses.</li>
+     *       <li><code>\\((?:[^()]*|\\([^()]*\\))*\\)</code>: Nested parentheses, allowing for any content inside them, which can include other nested parentheses.</li>
+     *     </ul>
+     *   </li>
+     *   <li><code>\\)</code>: Matches the closing parenthesis of the `@TestDoc` annotation.</li>
+     * </ul>
+     * </p>
+     */
+    private static final String TEST_DOC_PATTERN = "@TestDoc\\((?:[^()]*|\\((?:[^()]*|\\([^()]*\\))*\\))*\\)";
 
     private static final String EBNFGrammarOfTestMethod = """
             // Lexer rules
@@ -195,7 +212,7 @@ public class JavadocTestGenerator {
                 System.out.println("OUTPUT (length: " + response.length() + ")");
                 System.out.println(response);
 
-                // 3rd parse the out from OpenAI API to correct the scheme
+                // 3rd parse the out from OpenAI API to correct the scheme (TODO: we should make a loop or re-try here...because sometimes happens that GPT does not return test tags etc.)
                 ParseTree tree = parseResponse(response);
 
                 // 4th go with visitor and build annotation

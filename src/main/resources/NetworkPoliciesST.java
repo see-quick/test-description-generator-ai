@@ -102,7 +102,7 @@ public class NetworkPoliciesST extends AbstractST {
 		},
 		tags = {
 			@TestTag(value = "default"),
-			@TestTag(value = "internal-clients-used")
+			@TestTag(value = "internal_clients_used")
 		}
 	)
     void testNetworkPoliciesOnListenersWhenOperatorIsInSameNamespaceAsOperands() {
@@ -226,29 +226,29 @@ public class NetworkPoliciesST extends AbstractST {
 
     @IsolatedTest("Specific Cluster Operator for test case")
     @TestDoc(
-		description = @Desc("Test to verify network policies when the Cluster Operator is in a different namespace than the operand."),
+		description = @Desc("Test checking network policies when the Strimzi Operator is in a different namespace than the operand."),
 		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
 		steps = {
-			@Step(value = "Assume the environment is not Helm or OLM install", expected = "Assumption is valid"),
-			@Step(value = "Create a new TestStorage instance", expected = "TestStorage instance is created"),
-			@Step(value = "Define the second namespace", expected = "Second namespace is defined"),
-			@Step(value = "Create and set operator labels", expected = "Operator labels are set"),
-			@Step(value = "Install the Cluster Operator in the test namespace", expected = "Cluster Operator is installed"),
-			@Step(value = "Label the test namespace", expected = "Namespace is labeled correctly"),
-			@Step(value = "Set the operator to the second namespace", expected = "Operator is set to the second namespace"),
-			@Step(value = "Create resources with wait in the second namespace", expected = "Resources are created successfully"),
-			@Step(value = "Check network policies in the second namespace", expected = "Network policies are verified"),
-			@Step(value = "Change Kafka configuration and check observed generation", expected = "Configuration is changed and observed generation is checked")
+			@Step(value = "Assume the environment is not installed using Helm or OLM", expected = "The assumption holds"),
+			@Step(value = "Initialize test storage", expected = "Test storage is initialized"),
+			@Step(value = "Prepare second namespace", expected = "Second namespace is prepared"),
+			@Step(value = "Set operator namespace labels", expected = "Operator namespace labels are set"),
+			@Step(value = "Install Cluster Operator and run installation", expected = "Cluster Operator is installed"),
+			@Step(value = "Edit namespace labels", expected = "Namespace labels are edited"),
+			@Step(value = "Set Cluster namespace to second namespace", expected = "Cluster namespace is set to the second namespace"),
+			@Step(value = "Create Kafka resources with metrics config in the second namespace", expected = "Kafka resources with metrics config are created"),
+			@Step(value = "Check network policies in the namespace", expected = "Network policies are checked"),
+			@Step(value = "Change Kafka configuration and check observed generation", expected = "Kafka configuration is changed and observed generation is checked")
 		},
 		useCases = {
-			@UseCase(id = "different-namespace"),
-			@UseCase(id = "network-policies"),
-			@UseCase(id = "cluster-operator")
+			@UseCase(id = "network-policy"),
+			@UseCase(id = "multi-namespace")
 		},
 		tags = {
-			@TestTag(value = "integration"),
-			@TestTag(value = "regression"),
-			@TestTag(value = "network-policy")
+			@TestTag(value = "network"),
+			@TestTag(value = "namespace"),
+			@TestTag(value = "kafka"),
+			@TestTag(value = "strimzi")
 		}
 	)
     void testNPWhenOperatorIsInDifferentNamespaceThanOperand() {
@@ -301,23 +301,27 @@ public class NetworkPoliciesST extends AbstractST {
     @SkipDefaultNetworkPolicyCreation("NetworkPolicy generation from CO is disabled in this test, resulting in problems with connection" +
         " in case of that DENY ALL global NetworkPolicy is used")
     @TestDoc(
-		description = @Desc("Test verifies that no Network Policies are generated when the 'STRIMZI_NETWORK_POLICY_GENERATION' environment variable is set to false."),
+		description = @Desc("Test verifying that NetworkPolicy is not generated when the STRIMZI_NETWORK_POLICY_GENERATION environment variable is set to false."),
 		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
 		steps = {
-			@Step(value = "Assume Helm or OLM installation is not used", expected = "Assumption holds true"),
-			@Step(value = "Initialize test storage and set the environment variable 'STRIMZI_NETWORK_POLICY_GENERATION' to false", expected = "Environment variable is set correctly"),
-			@Step(value = "Install Cluster Operator with the specified environment variable", expected = "Cluster Operator is installed successfully"),
-			@Step(value = "Create Kafka Node Pools", expected = "Kafka Node Pools are created successfully"),
-			@Step(value = "Create Kafka with Cruise Control", expected = "Kafka with Cruise Control is created successfully"),
-			@Step(value = "Create Kafka Connect", expected = "Kafka Connect is created successfully"),
-			@Step(value = "Retrieve and verify the list of Network Policies generated by Strimzi", expected = "The list of Network Policies is empty")
+			@Step(value = "Assume Helm and OLM install checks are false", expected = "Test preconditions are verified"),
+			@Step(value = "Initialize TestStorage with test context", expected = "TestStorage instance is created"),
+			@Step(value = "Set STRIMZI_NETWORK_POLICY_GENERATION environment variable to false", expected = "Environment variable is set"),
+			@Step(value = "Install Cluster Operator with modified environment variables", expected = "Cluster Operator is installed"),
+			@Step(value = "Create Kafka Node Pools Broker", expected = "Kafka Node Pools Broker is created"),
+			@Step(value = "Create Kafka Node Pools Controller", expected = "Kafka Node Pools Controller is created"),
+			@Step(value = "Create Kafka cluster with Cruise Control", expected = "Kafka cluster with Cruise Control is created"),
+			@Step(value = "Create Kafka Connect cluster", expected = "Kafka Connect cluster is created"),
+			@Step(value = "Fetch generated NetworkPolicies", expected = "List of NetworkPolicies generated by Strimzi is fetched"),
+			@Step(value = "Verify that NetworkPolicy list is empty", expected = "No NetworkPolicies are generated")
 		},
 		useCases = {
-			@UseCase(id = "network-policy-generation")
+			@UseCase(id = "network-policy-verification")
 		},
 		tags = {
-			@TestTag(value = "CRUISE_CONTROL"),
-			@TestTag(value = "NetworkPolicy")
+			@TestTag(value = "regression"),
+			@TestTag(value = "network-policy"),
+			@TestTag(value = "cruise-control")
 		}
 	)
     void testNPGenerationEnvironmentVariable() {
