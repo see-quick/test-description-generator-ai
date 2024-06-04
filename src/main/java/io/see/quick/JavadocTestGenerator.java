@@ -105,14 +105,18 @@ public class JavadocTestGenerator {
             )
         """ ;
 
-    private static String generateDocumentation(final String codeSnippet, final String possibleAuthor,
+    private static String generateDocumentation(final MethodDeclaration methodDeclaration, final String possibleAuthor,
                                                 final String possibleAuthorsEmail) {
+        final String codeSnippet = methodDeclaration.toString();
+        final String javadoc = methodDeclaration.getJavadocComment().isPresent() ? methodDeclaration.getJavadocComment().toString() : "";
         final String prompt = "Generate a Java annotation using the `@TestDoc` format based on the provided method signature and EBNF grammar. " +
             "The annotation should document the test method's purpose, steps, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Method Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNFGrammarOfTestMethod + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
+            "Include at least two @TestTag inside tags\n" +
             "Pattern Format you should follow:\n" + exampleENBFGrammarOfTestMethod + "\n" +
+            "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @TestDoc scheme nothing else!" +
             "Generate it with TEXT only! not ```java code``` Thanks! Much love!";
 
@@ -210,7 +214,7 @@ public class JavadocTestGenerator {
                 methodDeclaration.getAnnotations().removeIf(a -> a.getName().asString().equals("TestDoc"));
 
                 // 1st part we input method part into OpenAI API request
-                final String response = generateDocumentation(methodDeclaration.toString(), authorDetails[0], authorDetails[1]);
+                final String response = generateDocumentation(methodDeclaration, authorDetails[0], authorDetails[1]);
 
                 // 2nd part we receive response from OpenAI API
                 System.out.println("OUTPUT (length: " + response.length() + ")");
