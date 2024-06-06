@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/format/SuiteDocFormat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/format/SuiteDocFormat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/format/TestDocFormat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/format/TestDocFormat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" afterDir="false" />
-    </list>
+    <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,6 +50,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/io/see/quick/grammar" />
     </key>
