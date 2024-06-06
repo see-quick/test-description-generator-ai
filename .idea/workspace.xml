@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/AnnotationApplierVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/visitors/TestDocAnnotationApplierVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +71,7 @@
       <module name="test-description-generator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="io.see.quick.*" />
+          <option name="PATTERN" value="io.see.quick.visitors.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -81,7 +84,7 @@
       <module name="test-description-generator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="io.see.quick.*" />
+          <option name="PATTERN" value="io.see.quick.visitors.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -89,8 +92,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JavadocTestGenerator (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocTestGenerator" />
+    <configuration name="JavadocGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocGenerator" />
       <module name="test-description-generator" />
       <extension name="coverage">
         <pattern>
@@ -102,10 +105,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JavadocTestGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocTestGenerator" />
+    <configuration name="JavadocGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocGenerator" />
       <module name="test-description-generator" />
       <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java $PROJECT_DIR$/src/main/resources/NetworkPoliciesST.java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.see.quick.visitors.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavadocTestGenerator (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocTestGenerator" />
+      <module name="test-description-generator" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="io.see.quick.*" />
@@ -130,7 +146,7 @@
       </method>
     </configuration>
     <configuration name="KafkaNodePoolSTJavadoc" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocTestGenerator" />
+      <option name="MAIN_CLASS_NAME" value="io.see.quick.JavadocGenerator" />
       <module name="test-description-generator" />
       <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java $PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" />
       <method v="2">
@@ -141,7 +157,7 @@
       <module name="test-description-generator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="io.see.quick.*" />
+          <option name="PATTERN" value="io.see.quick.visitors.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -154,16 +170,15 @@
     </configuration>
     <list>
       <item itemvalue="Application.KafkaNodePoolSTJavadoc" />
-      <item itemvalue="Application.JavadocTestGenerator (1)" />
+      <item itemvalue="Application.JavadocGenerator" />
       <item itemvalue="Application.BatchJavadocGenerator" />
       <item itemvalue="Application.CodeParser" />
-      <item itemvalue="Application.JavadocTestGenerator" />
       <item itemvalue="JUnit.AnnotationsApplierVisitorTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.JavadocTestGenerator" />
-        <item itemvalue="Application.JavadocTestGenerator (1)" />
+        <item itemvalue="Application.JavadocGenerator" />
+        <item itemvalue="Application.JavadocGenerator" />
         <item itemvalue="JUnit.AnnotationsApplierVisitorTest" />
         <item itemvalue="Application.CodeParser" />
         <item itemvalue="Application.BatchJavadocGenerator" />
@@ -206,17 +221,22 @@
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>267</line>
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
+          <line>295</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocTestGenerator.java</url>
-          <line>213</line>
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
+          <line>241</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
           </properties>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
+          <line>279</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
