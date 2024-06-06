@@ -49,7 +49,7 @@ public class SuiteDocFormat {
             // Tags formatting, one line each
             formattedAnnotation += formatSection(foundAnnotation, "tags", "\n");
 
-            formattedAnnotation += FOUR_SPACES + ")"; // Close the SuiteDoc annotation
+            formattedAnnotation += ")"; // Close the SuiteDoc annotation
 
             // Replace the original annotation in the code with the formatted version
             m.appendReplacement(sb, Matcher.quoteReplacement(formattedAnnotation));
@@ -67,7 +67,7 @@ public class SuiteDocFormat {
         if (m.find()) {
             String content = m.group(1).trim();  // Capture the content including the @Desc annotation
             // Properly format and return the description line
-            return EIGHT_SPACES + "description = " + content + ",\n";
+            return FOUR_SPACES + "description = " + content + ",\n";
         }
         return "";  // Return empty if no match is found
     }
@@ -80,8 +80,8 @@ public class SuiteDocFormat {
             String content = m.group(1).trim();
             content = Arrays.stream(content.split(","))
                 .map(String::trim)
-                .collect(Collectors.joining(",\n" + TWELVE_SPACES));
-            return EIGHT_SPACES + key + " = {\n" + TWELVE_SPACES + content + "\n" + EIGHT_SPACES + "}" + endDelimiter;
+                .collect(Collectors.joining(",\n" + EIGHT_SPACES));
+            return FOUR_SPACES + key + " = {\n" + EIGHT_SPACES + content + "\n" + FOUR_SPACES + "}" + endDelimiter;
         }
         return "";
     }
@@ -93,7 +93,7 @@ public class SuiteDocFormat {
         if (m.find()) {
             String name = m.group(1).replaceAll("\n", "").replaceAll("\\s+", " ");
             String email = m.group(2).replaceAll("\n", "").replaceAll("\\s+", " ");
-            return EIGHT_SPACES + "contact = @Contact(name = \"" + name + "\", email = \"" + email + "\"),\n";
+            return FOUR_SPACES + "contact = @Contact(name = \"" + name + "\", email = \"" + email + "\"),\n";
         }
         return "";
     }
@@ -108,9 +108,9 @@ public class SuiteDocFormat {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(s -> "@Step" + s.trim())
-                .collect(Collectors.joining(",\n" + TWELVE_SPACES));  // Format steps with proper indentation
+                .collect(Collectors.joining(",\n" + EIGHT_SPACES));  // Format steps with proper indentation
 
-            return EIGHT_SPACES + key + " = {\n" + TWELVE_SPACES + steps + "\n" + EIGHT_SPACES + "},\n";
+            return FOUR_SPACES + key + " = {\n" + EIGHT_SPACES + steps + "\n" + FOUR_SPACES + "},\n";
         }
         return "";
     }
