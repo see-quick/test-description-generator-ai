@@ -2,14 +2,14 @@
 
 # JavadocTestGenerator
 
-`JavadocTestGenerator` is a Java application designed to automatically generate `@TestDoc` annotations for Java methods based on predefined EBNF grammar and method signatures. This project leverages the JavaParser library to parse Java source code, the OpenAI API for generating content based on natural language processing, and ANTLR for custom grammar parsing.
+`JavadocTestGenerator` is a Java application designed to automatically generate `@TestDoc` and `@SuiteDoc` annotations for Java methods and classes based on predefined EBNF grammar and method signatures. This project leverages the JavaParser library to parse Java source code, the OpenAI API for generating content based on natural language processing, and ANTLR for custom grammar parsing.
 
 ## Features
 
-- **Dynamic Annotation Generation**: Generate detailed Java annotations dynamically based on the method signature and custom grammar rules.
+- **Dynamic Annotation Generation**: Generates detailed Java annotations dynamically based on the method or class signature and custom grammar rules.
 - **Integration with OpenAI API**: Utilizes OpenAI's powerful language models to generate human-like, contextually appropriate documentation comments.
-- **Custom Grammar Parsing**: Leverages ANTLR to parse and interpret custom EBNF grammar rules defining the structure of `@TestDoc` annotations.
-- **Automated Documentation**: Facilitates the creation of structured documentation, improving code maintainability and readability.
+- **Custom Grammar Parsing**: Leverages ANTLR to parse and interpret custom EBNF grammar rules defining the structure of `@TestDoc` and `@SuiteDoc` annotations.
+- **Automated Documentation**: Facilitates the creation of structured documentation for both individual methods and test suites, improving code maintainability and readability.
 
 ## Prerequisites
 
@@ -51,19 +51,19 @@ The `JavadocTestGenerator` takes two arguments:
 
 ## EBNF Grammar
 
-The application uses Extended Backus-Naur Form (EBNF) to define the structure of the `@TestDoc` annotations. This grammar is essential for the ANTLR to parse and generate the annotations correctly based on the defined rules.
-
+The application uses Extended Backus-Naur Form (EBNF) to define the structure of the @TestDoc and @SuiteDoc annotations. This grammar is essential for ANTLR to parse and generate the annotations correctly based on the defined rules.
 ```plaintext
 TestDocAnnotation ::= '@TestDoc' '(' TestDocBody ')'
 TestDocBody ::= TestDocAttribute { ',' TestDocAttribute }
+SuiteDocAnnotation ::= '@SuiteDoc' '(' SuiteDocBody ')'
+SuiteDocBody ::= SuiteDocAttribute { ',' SuiteDocAttribute }
 ...
 ```
 
 ## Example
 
-This section demonstrates how our Java application enhances test methods with auto-generated documentation using the @TestDoc annotation. 
-The example below shows a before-and-after scenario for a test method in the NetworkPoliciesST class.
-
+This section demonstrates how our Java application enhances test methods and classes with auto-generated documentation using the @TestDoc and @SuiteDoc annotations.
+The examples below show a before-and-after scenario for a test method and a test class.
 ### Before
 
 Initially, the test method might simply look like this:
@@ -74,7 +74,7 @@ void testNPWhenOperatorIsInDifferentNamespaceThanOperand() {
 }
 ```
 
-### After
+### After - Using @TestDoc
 
 ```java
 @TestDoc(
@@ -105,6 +105,34 @@ void testNPWhenOperatorIsInDifferentNamespaceThanOperand() {
 )
 void testNPWhenOperatorIsInDifferentNamespaceThanOperand() {
      // method implementation
+}
+```
+
+### After - Using `SuiteDoc`
+
+```java
+@SuiteDoc(
+    description = @Desc("Suite handling all Kafka deployment tests."),
+    contact = @Contact(name = "John Doe", email = "john.doe@example.com"),
+    beforeTestSteps = {
+        @Step(value = "Setup initial environment constraints", expected = "Environment setup complete"),
+        ...
+    },
+    afterTestSteps = {
+        @Step(value = "Clean up resources", expected = "Resources cleaned up"),
+        ...
+    },
+    useCases = {
+        @UseCase(id = "full-kafka-deployment"),
+        ...
+    },
+    tags = {
+        @TestTag(value = "suite"),
+        ...
+    }
+)
+public class KafkaDeploymentTests {
+    // class implementation
 }
 ```
 

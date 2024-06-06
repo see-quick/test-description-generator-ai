@@ -47,225 +47,27 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 
 @Tag(REGRESSION)
+@SuiteDoc(
+    description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+    contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
+    beforeTestSteps = {
+        @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),,
+        @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),,
+        @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),,
+        @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),,
+        @Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),,
+        @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
+    },
+    useCases = {
+        @UseCase(id = "kafka-node-pool")
+    },
+    tags = {
+        @TestTag(value = "integration"),
+        @TestTag(value = "regression")
+    }
+)
 public class KafkaNodePoolST extends AbstractST {
     private static final Logger LOGGER = LogManager.getLogger(KafkaNodePoolST.class);
-
-    /**
-     * @description This test case verifies the management of broker IDs in Kafka Node Pools using annotations.
-     *
-     * @steps
-     *  1. - Deploy a Kafka instance with annotations to manage Node Pools and Initial NodePool (Initial) to hold Topics and act as controller.
-     *     - Kafka instance is deployed according to Kafka and KafkaNodePool custom resource, with IDs 90, 91.
-     *  2. - Deploy additional 2 NodePools (A,B) with 1 and 2 replicas, and preset 'next-node-ids' annotations holding resp. values ([4],[6]).
-     *     - NodePools are deployed, NodePool A contains ID 4, NodePoolB contains Ids 6, 0.
-     *  3. - Annotate NodePool A 'next-node-ids' and NodePool B 'remove-node-ids' respectively ([20-21],[6,55]) afterward scale to 4 and 1 replica resp.
-     *     - NodePools are scaled, NodePool A contains IDs 4, 20, 21, 1. NodePool B contains ID 0.
-     *  4. - Annotate NodePool A 'remove-node-ids' and NodePool B 'next-node-ids' respectively ([20],[1]) afterward scale to 2 and 6 replica resp.
-     *     - NodePools are scaled, NodePool A contains IDs 1, 4. NodePool B contains ID 2, 3, 5.
-     *
-     * @usecase
-     *  - kafka-node-pool
-     *  - broker-id-management
-     */
-    @ParallelNamespaceTest
-    @TestDoc(description = @Desc("This test case verifies the management of broker IDs in Kafka Node Pools using annotations."), contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"), steps = { @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial NodePool (Initial) to hold Topics and act as controller. Kafka instance is deployed according to Kafka and KafkaNodePool custom resource, with IDs 90, 91.", expected = "Kafka instance and Initial NodePool are successfully deployed."), @Step(value = "Deploy additional 2 NodePools (A,B) with 1 and 2 replicas, and preset 'next-node-ids' annotations holding resp. values ([4],[6]). NodePools are deployed, NodePool A contains ID 4, NodePoolB contains Ids 6, 0.", expected = "NodePools A and B are deployed with correct IDs."), @Step(value = "Annotate NodePool A 'next-node-ids' and NodePool B 'remove-node-ids' respectively ([20-21],[6,55]) afterward scale to 4 and 1 replica resp. NodePools are scaled, NodePool A contains IDs 4, 20, 21, 1. NodePool B contains ID 0.", expected = "NodePools A and B are correctly annotated and scaled."), @Step(value = "Annotate NodePool A 'remove-node-ids' and NodePool B 'next-node-ids' respectively ([20],[1]) afterward scale to 2 and 6 replica resp. NodePools are scaled, NodePool A contains IDs 1, 4. NodePool B contains ID 2, 3, 5.", expected = "NodePools A and B are correctly annotated and scaled after the final changes.") }, useCases = { @UseCase(id = "kafka-node-pool"), @UseCase(id = "broker-id-management") }, tags = { @TestTag(value = "default"), @TestTag(value = "regression") })
-    void testKafkaNodePoolBrokerIdsManagementUsingAnnotations() {
-        final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
-        final String nodePoolNameA = testStorage.getBrokerPoolName() + "-a";
-        final String nodePoolNameB = testStorage.getBrokerPoolName() + "-b";
-        final String nodePoolNameInitial = testStorage.getBrokerPoolName() + "-initial";
-
-        // Deploy Initial NodePool (which will hold initial topics and will never be scaled down) with IDs far from those that will be used in the test
-        resourceManager.createResourceWithWait(
-            NodePoolsConverter.convertNodePoolsIfNeeded(
-                KafkaNodePoolTemplates.controllerPoolPersistentStorage(testStorage.getNamespaceName(), testStorage.getControllerPoolName(), testStorage.getClusterName(), 3)
-                    .editOrNewMetadata()
-                        .withAnnotations(Map.of(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS, "[100-103]"))
-                    .endMetadata()
-                    .build()
-            )
-        );
-        resourceManager.createResourceWithWait(
-            KafkaNodePoolTemplates.brokerPoolPersistentStorage(testStorage.getNamespaceName(), nodePoolNameInitial, testStorage.getClusterName(), 2)
-                .editOrNewMetadata()
-                    .withAnnotations(Map.of(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS, "[91-93]"))
-                .endMetadata()
-                .build(),
-            KafkaTemplates.kafkaPersistent(testStorage.getClusterName(), 1, 1).build()
-        );
-
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameInitial), 2);
-
-        LOGGER.info("Testing deployment of NodePools with pre-configured annotation: {} is creating Brokers with correct IDs", Annotations.ANNO_STRIMZI_IO_NODE_POOLS);
-
-        // Deploy NodePool A with only 1 replica and next ID 4, and NodePool B with 2 replica and next ID 6
-        resourceManager.createResourceWithWait(KafkaNodePoolTemplates.brokerPoolPersistentStorage(testStorage.getNamespaceName(), nodePoolNameA, testStorage.getClusterName(), 1)
-                .editOrNewMetadata()
-                    .withAnnotations(Map.of(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS, "[4]"))
-                .endMetadata()
-                .build(),
-            KafkaNodePoolTemplates.brokerPoolPersistentStorage(testStorage.getNamespaceName(), nodePoolNameB, testStorage.getClusterName(), 2)
-                .editOrNewMetadata()
-                    .withAnnotations(Map.of(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS, "[6]"))
-                .endMetadata()
-                .build()
-        );
-
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameA), 1);
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameB), 2);
-
-        LOGGER.info("Verifying NodePools contain correct IDs");
-        assertThat("NodePool: " + nodePoolNameA + " does not contain expected nodeIds: [4]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameA).get(0).equals(4));
-        assertThat("NodePool: " + nodePoolNameB + " does not contain expected nodeIds: [0, 6]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameB).equals(Arrays.asList(0, 6)));
-
-        LOGGER.info("Testing annotation with upscaling NodePool A (more replicas than specified IDs) " +
-                    "and downscaling NodePool B (more IDs than needed to be scaled down. This redundant ID is not present)");
-        // Annotate NodePool A for scale up with fewer IDs than needed -> this should cause addition of non-used ID starting from [0] in ASC order, which is in this case [1]
-        KafkaNodePoolUtils.setKafkaNodePoolAnnotation(testStorage.getNamespaceName(), nodePoolNameA, Collections.singletonMap(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS,  "[20-21]"));
-        // Annotate NodePool B for scale down with more IDs than needed - > this should not matter as ID [55] is not present so only ID [6] is removed
-        KafkaNodePoolUtils.setKafkaNodePoolAnnotation(testStorage.getNamespaceName(), nodePoolNameB, Collections.singletonMap(Annotations.ANNO_STRIMZI_IO_REMOVE_NODE_IDS, "[6, 55]"));
-
-        // Scale NodePool A up + NodePool B down
-        KafkaNodePoolUtils.scaleKafkaNodePool(testStorage.getNamespaceName(), nodePoolNameA, 4);
-        KafkaNodePoolUtils.scaleKafkaNodePool(testStorage.getNamespaceName(), nodePoolNameB, 1);
-
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameA), 4);
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameB), 1);
-
-        LOGGER.info("Verifying NodePools contain correct IDs");
-        assertThat("NodePool: " + nodePoolNameA + " does not contain expected nodeIds: [1, 4, 20, 21]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameA).equals(Arrays.asList(1, 4, 20, 21)));
-        assertThat("NodePool: " + nodePoolNameB + " does not contain expected nodeIds: [0]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameB).get(0).equals(0));
-
-        // 3. Case (A-missing ID for downscale, B-already used ID for upscale)
-        LOGGER.info("Testing annotation with downscaling NodePool A (fewer IDs than needed) and NodePool B (already used ID)");
-        // Annotate NodePool A for scale down with fewer IDs than needed, this should cause removal of IDs in DESC order after the annotated ID is deleted
-        KafkaNodePoolUtils.setKafkaNodePoolAnnotation(testStorage.getNamespaceName(), nodePoolNameA, Collections.singletonMap(Annotations.ANNO_STRIMZI_IO_REMOVE_NODE_IDS,  "[20]"));
-        // Annotate NodePool B for scale up with ID [1] already in use
-        KafkaNodePoolUtils.setKafkaNodePoolAnnotation(testStorage.getNamespaceName(), nodePoolNameB, Collections.singletonMap(Annotations.ANNO_STRIMZI_IO_NEXT_NODE_IDS, "[1]"));
-
-        KafkaNodePoolUtils.scaleKafkaNodePool(testStorage.getNamespaceName(), nodePoolNameA, 2);
-        KafkaNodePoolUtils.scaleKafkaNodePool(testStorage.getNamespaceName(), nodePoolNameB, 4);
-
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameA), 2);
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), nodePoolNameB), 4);
-
-        LOGGER.info("Verifying NodePools contain correct IDs");
-        assertThat("NodePool: " + nodePoolNameA + " does not contain expected nodeIds: [1, 4]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameA).equals(Arrays.asList(1, 4)));
-        assertThat("NodePool: " + nodePoolNameB + " does not contain expected nodeIds: [0, 2, 3, 5]",
-            KafkaNodePoolUtils.getCurrentKafkaNodePoolIds(testStorage.getNamespaceName(), nodePoolNameB).equals(Arrays.asList(0, 2, 3, 5)));
-    }
-
-    /**
-     * @description This test case verifies changing of roles in Kafka Node Pools.
-     *
-     * @steps
-     *  1. - Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, both with mixed role, first one stable, second one which will be modified.
-     *  2. - Create KafkaTopic with replica number requiring all Kafka Brokers to be present.
-     *  3. - Annotate one of Node Pools to perform manual Rolling Update.
-     *     - Rolling Update started.
-     *  3. - Change role of Kafka Node Pool from mixed to controller only role.
-     *     - Role Change is being prevented because a previously created KafkaTopic still has some replicas present on the node to be scaled down, also there is original Rolling Update going on.
-     *  4. - Original Rolling Update finishes successfully.
-     *  5. - Delete previously created KafkaTopic.
-     *     - KafkaTopic is deleted, and roll of Node Pool whose role was changed begins resulting in new nodes with expected role.
-     *  6. - Change role of Kafka Node Pool from controller only to mixed role.
-     *     - Kafka Node Pool changes role to mixed role.
-     *  7. - Produce and consume messages on newly created KafkaTopic with replica count requiring also new brokers to be present.
-     *
-     * @usecase
-     *  - kafka-node-pool
-     */
-    @ParallelNamespaceTest
-    @TestDoc(
-		description = @Desc("This test case verifies changing of roles in Kafka Node Pools."),
-		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
-		steps = {
-			@Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, both with mixed role, first one stable, second one which will be modified.", expected = "Kafka instance with the required Node Pools is deployed."),
-			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present.", expected = "KafkaTopic with the necessary number of replicas is created."),
-			@Step(value = "Annotate one of Node Pools to perform manual Rolling Update.", expected = "Rolling Update started."),
-			@Step(value = "Change role of Kafka Node Pool from mixed to controller only role.", expected = "Role Change is prevented because a previously created KafkaTopic still has some replicas present on the node to be scaled down, also there is original Rolling Update going on."),
-			@Step(value = "Original Rolling Update finishes successfully.", expected = "Rolling Update completes."),
-			@Step(value = "Delete previously created KafkaTopic.", expected = "KafkaTopic is deleted, and role change of Node Pool whose role was changed begins resulting in new nodes with the expected role."),
-			@Step(value = "Change role of Kafka Node Pool from controller only to mixed role.", expected = "Kafka Node Pool changes role to mixed role."),
-			@Step(value = "Produce and consume messages on newly created KafkaTopic with replica count requiring also new brokers to be present.", expected = "Messages are produced and consumed successfully.")
-		},
-		useCases = {
-			@UseCase(id = "kafka-node-pool")
-		},
-		tags = {
-			@TestTag(value = "default"),
-			@TestTag(value = "role-change-test"),
-			@TestTag(value = "kafka")
-		}
-	)
-    void testNodePoolsRolesChanging() {
-        assumeTrue(Environment.isKRaftModeEnabled());
-        final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
-
-        // volatile KNP which will be transitioned from mixed to -> controller only role and afterward to mixed role again
-        final String volatileRolePoolName = testStorage.getMixedPoolName() + "-volatile";
-        final String volatileSPSComponentName = KafkaResource.getStrimziPodSetName(testStorage.getClusterName(), volatileRolePoolName);
-        final LabelSelector volatilePoolLabelSelector = KafkaNodePoolResource.getLabelSelector(testStorage.getClusterName(), volatileRolePoolName, ProcessRoles.CONTROLLER);
-
-
-        // Stable Node Pool for purpose of having at least 3 brokers and 3 controllers all the time.
-        resourceManager.createResourceWithWait(
-            NodePoolsConverter.convertNodePoolsIfNeeded(
-                KafkaNodePoolTemplates.brokerPool(testStorage.getNamespaceName(), testStorage.getBrokerPoolName(), testStorage.getClusterName(), 3).build(),
-                KafkaNodePoolTemplates.controllerPool(testStorage.getNamespaceName(), testStorage.getControllerPoolName(), testStorage.getClusterName(), 3).build()
-            )
-        );
-
-        resourceManager.createResourceWithWait(
-            KafkaNodePoolTemplates.mixedPoolPersistentStorage(testStorage.getNamespaceName(), volatileRolePoolName, testStorage.getClusterName(), 3).build(),
-            KafkaTemplates.kafkaPersistent(testStorage.getClusterName(), 1, 1).build()
-        );
-
-        LOGGER.info("Create KafkaTopic {}/{} with 6 replicas, spawning across all brokers", testStorage.getNamespaceName(), testStorage.getTopicName());
-        final KafkaTopic kafkaTopic = KafkaTopicTemplates.topic(testStorage.getClusterName(), testStorage.getTopicName(), 1, 6, testStorage.getNamespaceName()).build();
-        resourceManager.createResourceWithWait(kafkaTopic);
-
-        LOGGER.info("wait for Kafka pods stability");
-        PodUtils.waitUntilPodStabilityReplicasCount(testStorage.getNamespaceName(), volatileSPSComponentName, 3);
-
-        LOGGER.info("Start rolling update");
-        Map<String, String> volatilePoolPodsSnapshot = PodUtils.podSnapshot(testStorage.getNamespaceName(), volatilePoolLabelSelector);
-        StrimziPodSetUtils.annotateStrimziPodSet(testStorage.getNamespaceName(), volatileSPSComponentName, Collections.singletonMap(Annotations.ANNO_STRIMZI_IO_MANUAL_ROLLING_UPDATE, "true"));
-        RollingUpdateUtils.waitTillComponentHasStartedRolling(testStorage.getNamespaceName(), volatilePoolLabelSelector, volatilePoolPodsSnapshot);
-
-        LOGGER.info("Change role in {}/{}, from mixed to broker only resulting in revert", testStorage.getNamespaceName(), volatileRolePoolName);
-        KafkaNodePoolResource.replaceKafkaNodePoolResourceInSpecificNamespace(volatileRolePoolName, knp -> {
-            knp.getSpec().setRoles(List.of(ProcessRoles.CONTROLLER));
-        }, testStorage.getNamespaceName());
-
-        LOGGER.info("Wait for warning message in Kafka {}/{}", testStorage.getNamespaceName(), testStorage.getClusterName());
-        KafkaUtils.waitUntilKafkaStatusConditionContainsMessage(testStorage.getClusterName(), testStorage.getNamespaceName(), ".*Reverting role change.*");
-
-        LOGGER.info("Wait for (original) Rolling Update to finish successfully");
-        volatilePoolPodsSnapshot = RollingUpdateUtils.waitTillComponentHasRolled(testStorage.getNamespaceName(), volatilePoolLabelSelector, 3, volatilePoolPodsSnapshot);
-
-        // remove topic which blocks role change (removal of broker role thus decreasing number of broker nodes available)
-        LOGGER.info("Delete Kafka Topic {}/{}", testStorage.getNamespaceName(), testStorage.getTopicName());
-        resourceManager.deleteResource(kafkaTopic);
-        KafkaTopicUtils.waitForKafkaTopicDeletion(testStorage.getNamespaceName(), testStorage.getTopicName());
-
-        // wait for final roll changing
-        LOGGER.info("Wait for roll that will change role of KNP from mixed role to broker {}/{}", testStorage.getNamespaceName(), volatileRolePoolName);
-        volatilePoolPodsSnapshot = RollingUpdateUtils.waitTillComponentHasRolled(testStorage.getNamespaceName(), volatilePoolLabelSelector, 3, volatilePoolPodsSnapshot);
-
-        LOGGER.info("Change role in {}/{}, from broker only to mixed", testStorage.getNamespaceName(), volatileRolePoolName);
-        KafkaNodePoolResource.replaceKafkaNodePoolResourceInSpecificNamespace(volatileRolePoolName, knp -> {
-            knp.getSpec().setRoles(List.of(ProcessRoles.CONTROLLER, ProcessRoles.BROKER));
-        }, testStorage.getNamespaceName());
-        RollingUpdateUtils.waitTillComponentHasRolled(testStorage.getNamespaceName(), volatilePoolLabelSelector, 3, volatilePoolPodsSnapshot);
-
-        transmitMessagesWithNewTopicAndClean(testStorage, 5);
-    }
 
     /**
      * @description This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster.
@@ -289,24 +91,24 @@ public class KafkaNodePoolST extends AbstractST {
      */
     @ParallelNamespaceTest
     @TestDoc(
-		description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
-		contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
-		steps = {
-			@Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
-			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-			@Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
-			@Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-			@Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),
-			@Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
-		},
-		useCases = {
-			@UseCase(id = "kafka-node-pool")
-		},
-		tags = {
-			@TestTag(value = "default"),
-			@TestTag(value = "regression")
-		}
-	)
+        description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+        contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
+        steps = {
+            @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
+            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
+            @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
+            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
+            @Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),
+            @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
+        },
+        useCases = {
+            @UseCase(id = "kafka-node-pool")
+        },
+        tags = {
+            @TestTag(value = "integration"),
+            @TestTag(value = "regression")
+        }
+    )
     void testNodePoolsAdditionAndRemoval() {
         final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
         // node pools name convention is 'A' for all roles (: if possible i.e. based on feature gate) 'B' for broker roles.
