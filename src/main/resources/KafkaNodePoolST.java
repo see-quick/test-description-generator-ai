@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @Tag(REGRESSION)
 @SuiteDoc(
-    description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+    description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
     contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
     beforeTestSteps = {
         @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),,
@@ -62,7 +62,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         @UseCase(id = "kafka-node-pool")
     },
     tags = {
-        @TestTag(value = "integration"),
         @TestTag(value = "regression")
     }
 )
@@ -91,7 +90,7 @@ public class KafkaNodePoolST extends AbstractST {
      */
     @ParallelNamespaceTest
     @TestDoc(
-        description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+        description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
         contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
         steps = {
             @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
@@ -105,7 +104,6 @@ public class KafkaNodePoolST extends AbstractST {
             @UseCase(id = "kafka-node-pool")
         },
         tags = {
-            @TestTag(value = "integration"),
             @TestTag(value = "regression")
         }
     )

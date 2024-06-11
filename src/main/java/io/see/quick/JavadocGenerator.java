@@ -17,6 +17,7 @@ import io.see.quick.grammar.SuiteDocGrammarParser;
 import io.see.quick.grammar.TestDocGrammarLexer;
 import io.see.quick.grammar.TestDocGrammarParser;
 import io.see.quick.utils.GitUtils;
+import io.see.quick.utils.JavadocGeneratorUtils;
 import io.see.quick.visitors.TestDocAnnotationApplierVisitor;
 import io.see.quick.visitors.SuiteDocAnnotationApplierVisitor;
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -140,12 +142,21 @@ public class JavadocGenerator {
                                                 final String possibleAuthorsEmail) {
         final String codeSnippet = methodDeclaration.toString();
         final String javadoc = methodDeclaration.getJavadocComment().isPresent() ? methodDeclaration.getJavadocComment().toString() : "";
+
+        // Fetch tags from the class and method level
+        final List<String> classTags = JavadocGeneratorUtils.getClassTags((ClassOrInterfaceDeclaration) methodDeclaration.getParentNode().orElse(null));
+        final List<String> methodTags = JavadocGeneratorUtils.getMethodTags(methodDeclaration);
+
+        // Create tag strings for the prompt
+        final String classTagString = classTags.isEmpty() ? "No class level tags." : "Class tags: " + String.join(", ", classTags) + ".";
+        final String methodTagString = methodTags.isEmpty() ? "No method level tags." : "Method tags: " + String.join(", ", methodTags) + ".";
+
         final String prompt = "Generate a Java annotation using the `@TestDoc` format based on the provided method signature and EBNF grammar. " +
             "The annotation should document the test method's purpose, steps, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Method Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
-            "Include at least two @TestTag inside tags\n" +
+            "Include at least one @TestTag inside tags and consider these inherited tags: " + classTagString + " " + methodTagString + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @TestDoc scheme nothing else!" +
@@ -197,12 +208,17 @@ public class JavadocGenerator {
                                                 final String possibleAuthorsEmail) {
         final String codeSnippet = classOrInterfaceDeclaration.toString();
         final String javadoc = classOrInterfaceDeclaration.getJavadocComment().isPresent() ? classOrInterfaceDeclaration.getJavadocComment().toString() : "";
+        // Fetch tags from the class and method level
+        final List<String> classTags = JavadocGeneratorUtils.getClassTags(classOrInterfaceDeclaration);
+        // Create tag strings for the prompt
+        final String classTagString = classTags.isEmpty() ? "No class level tags." : "Class tags: " + String.join(", ", classTags) + ".";
+
         final String prompt = "Generate a Java annotation using the `@SuiteDoc` format based on the provided class signature and EBNF grammar. " +
             "The annotation should document the class method's purpose, steps, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Class Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_CLASS + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
-            "Include at least two @TestTag inside tags\n" +
+            "Include at least one @TestTag inside tags and consider these inherited tags: " + classTagString + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_OF_EBNF_GRAMMAR_OF_CLASS + "\n" +
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @SuiteDoc scheme nothing else!" +
