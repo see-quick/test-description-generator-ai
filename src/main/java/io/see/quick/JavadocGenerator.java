@@ -33,10 +33,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JavadocGenerator {
 
@@ -277,7 +275,7 @@ public class JavadocGenerator {
             LexicalPreservingPrinter.setup(cu);
             // Now modifications to cu will preserve the original formatting
 
-//            cu.accept(new MethodVisitor(inputFilePath), null);
+            cu.accept(new MethodVisitor(inputFilePath), null);
             cu.accept(new ClassVisitor(inputFilePath), null);
 
             // Use LexicalPreservingPrinter to convert the CompilationUnit back to string
