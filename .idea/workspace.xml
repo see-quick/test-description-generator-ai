@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="263d6206-98e8-4537-9456-cf14407bb086" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/grammar/SuiteDocGrammar.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/grammar/SuiteDocGrammar.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/see/quick/grammar/SuiteDocGrammarParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/see/quick/grammar/SuiteDocGrammarParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/KafkaNodePoolST.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/SuiteDocGrammar.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/SuiteDocGrammar.g4" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,12 +229,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
-          <line>311</line>
+          <line>325</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
-          <line>257</line>
+          <line>274</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
           </properties>
@@ -237,13 +242,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
-          <line>292</line>
-          <option name="timeStamp" value="20" />
+          <line>148</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
-          <line>146</line>
-          <option name="timeStamp" value="22" />
+          <line>215</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
+          <line>218</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/io/see/quick/JavadocGenerator.java</url>
+          <line>230</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
