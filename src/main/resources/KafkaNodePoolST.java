@@ -48,33 +48,20 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @Tag(REGRESSION)
 @SuiteDoc(
-    description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+    description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
     contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
     beforeTestSteps = {
-<<<<<<< Updated upstream
         @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),,
         @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),,
         @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),,
         @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),,
         @Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),,
         @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
-=======
-        @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
-        @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-        @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
-        @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-        @Step(value = "Remove one of the kafkaNodePools with broker role.", expected = "KafkaNodePool is removed, pods are deleted, but other pods in Kafka are stable and ready."),
-        @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
->>>>>>> Stashed changes
     },
     useCases = {
         @UseCase(id = "kafka-node-pool")
     },
     tags = {
-<<<<<<< Updated upstream
-        @TestTag(value = "integration"),
-=======
->>>>>>> Stashed changes
         @TestTag(value = "regression")
     }
 )
@@ -103,33 +90,20 @@ public class KafkaNodePoolST extends AbstractST {
      */
     @ParallelNamespaceTest
     @TestDoc(
-        description = @Desc("This test case verifies the possibility of adding and removing Kafka Node Pools into an existing Kafka cluster."),
+        description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
         contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
         steps = {
-<<<<<<< Updated upstream
             @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
             @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
             @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
             @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
             @Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),
             @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
-=======
-            @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
-            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-            @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
-            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
-            @Step(value = "Remove one of the kafkaNodePools with broker role.", expected = "KafkaNodePool is removed, pods are deleted, but other pods in Kafka are stable and ready."),
-            @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, deploy clients, transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
->>>>>>> Stashed changes
         },
         useCases = {
             @UseCase(id = "kafka-node-pool")
         },
         tags = {
-<<<<<<< Updated upstream
-            @TestTag(value = "integration"),
-=======
->>>>>>> Stashed changes
             @TestTag(value = "regression")
         }
     )
