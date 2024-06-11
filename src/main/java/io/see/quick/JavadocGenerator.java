@@ -2,6 +2,7 @@ package io.see.quick;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -32,7 +33,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -213,12 +213,27 @@ public class JavadocGenerator {
         // Create tag strings for the prompt
         final String classTagString = classTags.isEmpty() ? "No class level tags." : "Class tags: " + String.join(", ", classTags) + ".";
 
+        // Fetch only @BeforeAll and @AfterAll annotated methods
+        final List<MethodDeclaration> beforeAllMethods = classOrInterfaceDeclaration.getMembers()
+            .stream()
+            .filter(member -> member instanceof MethodDeclaration)
+            .map(member -> (MethodDeclaration) member)
+            .filter(method -> method.getAnnotationByName("BeforeAll").isPresent()).toList();
+
+        final List<MethodDeclaration> afterAllMethods = classOrInterfaceDeclaration.getMembers()
+            .stream()
+            .filter(member -> member instanceof MethodDeclaration)
+            .map(member -> (MethodDeclaration) member)
+            .filter(method -> method.getAnnotationByName("AfterAll").isPresent()).toList();
+
         final String prompt = "Generate a Java annotation using the `@SuiteDoc` format based on the provided class signature and EBNF grammar. " +
-            "The annotation should document the class method's purpose, steps, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
+            "The annotation should document the class method's purpose, steps only in @BeforeAll,@AfterAll methods if exists, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Class Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_CLASS + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
             "Include at least one @TestTag inside tags and consider these inherited tags: " + classTagString + "\n" +
+            "Use only this in Before test steps as inspiration! If empty let it be:\n" + beforeAllMethods + "\n" +
+            "Use only this in After test steps as inspiration! If empty let it be:\n" + afterAllMethods + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_OF_EBNF_GRAMMAR_OF_CLASS + "\n" +
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @SuiteDoc scheme nothing else!" +
@@ -290,9 +305,6 @@ public class JavadocGenerator {
 
         @Override
         public void visit(ClassOrInterfaceDeclaration classOrInterfaceDeclaration, Void arg) {
-            System.out.println("we have been here...." + classOrInterfaceDeclaration.getName());
-            System.out.println(classOrInterfaceDeclaration.getJavadoc());
-
             int lineNumber = classOrInterfaceDeclaration.getBegin().map(Pos -> Pos.line).orElse(-1);
             String[] authorDetails = GitUtils.getAuthorAndEmail(filePath, lineNumber);
 

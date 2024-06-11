@@ -19,8 +19,8 @@ suiteDocAttribute  : descriptionAttribute
 descriptionAttribute     : 'description' '=' '@Desc' '(' STRING ')';
 contactAttribute         : 'contact' '=' '@Contact' '(' contactBody ')';
 contactBody              : 'name' '=' STRING ',' 'email' '=' STRING;
-beforeTestStepsAttribute : 'beforeTestSteps' '=' '{' step ( ',' step )* '}';
-afterTestStepsAttribute  : 'afterTestSteps' '=' '{' step ( ',' step )* '}';
+beforeTestStepsAttribute : 'beforeTestSteps' '=' '{' (step ( ',' step )* ','?)? '}';
+afterTestStepsAttribute  : 'afterTestSteps' '=' '{' (step ( ',' step )* ','?)? '}';
 step                     : '@Step' '(' 'value' '=' STRING ',' 'expected' '=' STRING ')';
 useCasesAttribute        : 'useCases' '=' '{' useCase ( ',' useCase )* '}';
 useCase                  : '@UseCase' '(' 'id' '=' STRING ')';
