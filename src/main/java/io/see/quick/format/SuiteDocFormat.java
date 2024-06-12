@@ -108,7 +108,7 @@ public class SuiteDocFormat {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(s -> "@Step" + s.trim())
-                .collect(Collectors.joining(",\n" + EIGHT_SPACES));  // Format steps with proper indentation
+                .collect(Collectors.joining("\n" + EIGHT_SPACES));  // Format steps with proper indentation
 
             return FOUR_SPACES + key + " = {\n" + EIGHT_SPACES + steps + "\n" + FOUR_SPACES + "},\n";
         }
