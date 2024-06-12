@@ -306,7 +306,8 @@ public class JavadocGenerator {
         @Override
         public void visit(ClassOrInterfaceDeclaration classOrInterfaceDeclaration, Void arg) {
             int lineNumber = classOrInterfaceDeclaration.getBegin().map(Pos -> Pos.line).orElse(-1);
-            String[] authorDetails = GitUtils.getAuthorAndEmail(filePath, lineNumber);
+            int endLineNumber = classOrInterfaceDeclaration.getEnd().map(Pos -> Pos.line).orElse(-1);
+            String[] authorDetails = GitUtils.getMostFrequentSigner(filePath, lineNumber, endLineNumber);
 
             // Now use the author info to modify the @Contact annotation
             System.out.println("Author of class " + classOrInterfaceDeclaration.getName() + ": " + authorDetails[0]);
@@ -370,7 +371,8 @@ public class JavadocGenerator {
         public void visit(MethodDeclaration methodDeclaration, Void arg) {
             if (isTestMethod(methodDeclaration)) {
                 int lineNumber = methodDeclaration.getBegin().map(Pos -> Pos.line).orElse(-1);
-                String[] authorDetails = GitUtils.getAuthorAndEmail(filePath, lineNumber);
+                int endLineNumber = methodDeclaration.getEnd().map(Pos -> Pos.line).orElse(-1);
+                String[] authorDetails = GitUtils.getMostFrequentSigner(filePath, lineNumber, endLineNumber);
 
                 // Now use the author info to modify the @Contact annotation
                 System.out.println("Author of method " + methodDeclaration.getName() + ": " + authorDetails[0]);
