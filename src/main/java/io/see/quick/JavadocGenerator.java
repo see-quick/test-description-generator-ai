@@ -81,8 +81,8 @@ public class JavadocGenerator {
                         @UseCase(id = "core+++")
                 },
                 tags = {
-                        @TestTag(value = "default"),
-                        @TestTag(value = "regression")
+                        @TestTag(value = "DEFAULT"),
+                        @TestTag(value = "REGRESSION")
                 }
             )
         """ ;
@@ -132,8 +132,8 @@ public class JavadocGenerator {
                         @UseCase(id = "core")
                 },
                 tags = {
-                        @TestTag(value = "regression"),
-                        @TestTag(value = "clients")
+                        @TestTag(value = "REGRESSION"),
+                        @TestTag(value = "CLIENTS")
                 }
             )
         """;
@@ -156,7 +156,7 @@ public class JavadocGenerator {
             "Method Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
-            "Include at least one @TestTag inside tags and consider these inherited tags: " + classTagString + " " + methodTagString + "\n" +
+            "Include at least one @TestTag inside tags and consider these inherited tags (upper case always): " + classTagString + " " + methodTagString + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @TestDoc scheme nothing else!" +
@@ -231,7 +231,7 @@ public class JavadocGenerator {
             "Class Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_CLASS + "\n" +
             "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
-            "Include at least one @TestTag inside tags and consider these inherited tags: " + classTagString + "\n" +
+            "Include at least one @TestTag inside tags and consider these inherited tags (upper case always): " + classTagString + "\n" +
             "Use only this in Before test steps as inspiration! If empty let it be:\n" + beforeAllMethods + "\n" +
             "Use only this in After test steps as inspiration! If empty let it be:\n" + afterAllMethods + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_OF_EBNF_GRAMMAR_OF_CLASS + "\n" +
