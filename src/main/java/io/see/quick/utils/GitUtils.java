@@ -81,6 +81,43 @@ public class GitUtils {
         return authorDetails;
     }
 
+    public static String[] getMostFrequentSigner(String filePath, int startLine, int endLine) {
+        String[] mostFrequentSigner = new String[2]; // Array to hold the most frequent signer name and email
+        Map<String, Integer> signerCounts = new HashMap<>();
+        try {
+            // Construct the command
+            String command = String.format("git log -L %d,%d:%s --pretty=fuller", startLine, endLine, filePath);
+            ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", command + " | grep 'Signed-off-by'");
+            processBuilder.redirectErrorStream(true);  // Redirect errors to the output stream
+            Process process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("Signed-off-by")) {
+                    String signer = line.substring(line.indexOf("Signed-off-by:") + "Signed-off-by:".length()).trim();
+                    signerCounts.put(signer, signerCounts.getOrDefault(signer, 0) + 1);
+                }
+            }
+            process.waitFor(); // Wait for the process to complete
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new String[]{"Unknown Signer", "email_not_found"};
+        }
+
+        // Determine the most frequent signer
+        int maxCount = 0;
+        for (Map.Entry<String, Integer> entry : signerCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                mostFrequentSigner[0] = entry.getKey().split("<")[0].trim(); // Extract name
+                mostFrequentSigner[1] = entry.getKey().split("<")[1].replace(">", "").trim(); // Extract email
+                maxCount = entry.getValue();
+            }
+        }
+
+        return mostFrequentSigner;
+    }
+
     public static String getAuthorEmailByName(String authorName) {
         return authorEmailMap.getOrDefault(authorName, "email_not_found@example.com");
     }

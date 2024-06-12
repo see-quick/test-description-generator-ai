@@ -51,8 +51,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
     contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
     beforeTestSteps = {
-        @Step(value = "Check if OLM or Helm is not installed and Kafka Node Pools feature is enabled", expected = "Appropriate assumptions are confirmed"),,
-        @Step(value = "Run default installation of Cluster Operator", expected = "Cluster Operator is deployed")
+        @Step(value = "Assume false for OLM or Helm install and true for Kafka Node Pools enabled. Run cluster operator installation.", expected = "Cluster operator is installed")
     },
     afterTestSteps = {
         
@@ -88,6 +87,24 @@ public class KafkaNodePoolST extends AbstractST {
      *  - kafka-node-pool
      */
     @ParallelNamespaceTest
+    @TestDoc(
+        description = @Desc("This test case verifies possibility of adding and removing Kafka Node Pools into existing Kafka cluster."),
+        contact = @Contact(name = "see-quick", email = "maros.orsak159@gmail.com"),
+        steps = {
+            @Step(value = "Deploy a Kafka instance with annotations to manage Node Pools and Initial 2 NodePools, one being controller if possible other initial broker.", expected = "Kafka instance is deployed according to Kafka and KafkaNodePool custom resource."),
+            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
+            @Step(value = "Add extra KafkaNodePool with broker role to the Kafka.", expected = "KafkaNodePool is deployed and ready."),
+            @Step(value = "Create KafkaTopic with replica number requiring all Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected."),
+            @Step(value = "Remove one of kafkaNodePool with broker role.", expected = "KafkaNodePool is removed, Pods are deleted, but other pods in Kafka are stable and ready."),
+            @Step(value = "Create KafkaTopic with replica number requiring all the remaining Kafka Brokers to be present, Deploy clients and transmit messages and remove KafkaTopic.", expected = "Transition of messages is finished successfully, KafkaTopic created and cleaned as expected.")
+        },
+        useCases = {
+            @UseCase(id = "kafka-node-pool")
+        },
+        tags = {
+            @TestTag(value = "regression")
+        }
+    )
     void testNodePoolsAdditionAndRemoval() {
         final TestStorage testStorage = new TestStorage(ResourceManager.getTestContext());
         // node pools name convention is 'A' for all roles (: if possible i.e. based on feature gate) 'B' for broker roles.
