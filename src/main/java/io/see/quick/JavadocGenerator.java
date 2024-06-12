@@ -162,9 +162,6 @@ public class JavadocGenerator {
             "Generate ONLY that @TestDoc scheme nothing else!" +
             "Generate it with TEXT only! not ```java code``` Thanks! Much love!";
 
-        System.out.println("INPUT prompt:\n");
-        System.out.println(prompt);
-
         System.out.println("Prompt length is: " + prompt.length());
 
         // Create the list of messages for the chat request
@@ -238,9 +235,6 @@ public class JavadocGenerator {
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
             "Generate ONLY that @SuiteDoc scheme nothing else!" +
             "Generate it with TEXT only! not ```java code``` Thanks! Much love!";
-
-        System.out.println("INPUT prompt:\n");
-        System.out.println(prompt);
 
         System.out.println("Prompt length is: " + prompt.length());
 
