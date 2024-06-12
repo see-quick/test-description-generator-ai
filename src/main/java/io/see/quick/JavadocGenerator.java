@@ -138,8 +138,8 @@ public class JavadocGenerator {
             )
         """;
 
-    private static String generateDocumentation(final MethodDeclaration methodDeclaration, final String possibleAuthor,
-                                                final String possibleAuthorsEmail) {
+    private static String generateDocumentation(final MethodDeclaration methodDeclaration, final String authorOfMethod,
+                                                final String authorsEmailMethod) {
         final String codeSnippet = methodDeclaration.toString();
         final String javadoc = methodDeclaration.getJavadocComment().isPresent() ? methodDeclaration.getJavadocComment().toString() : "";
 
@@ -155,7 +155,7 @@ public class JavadocGenerator {
             "The annotation should document the test method's purpose, steps, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Method Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
-            "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
+            "Include the author as @Contact!: " + authorOfMethod + " (" + authorsEmailMethod + ")\n" +
             "Include at least one @TestTag inside tags and consider these inherited tags (upper case always): " + classTagString + " " + methodTagString + "\n" +
             "Pattern Format you should follow:\n" + EXAMPLE_EBNF_GRAMMAR_OF_TEST_METHOD + "\n" +
             "And if Javadoc exist to this method use that as inspiration:" + javadoc +
@@ -201,8 +201,8 @@ public class JavadocGenerator {
 //                ")";
     }
 
-    private static String generateDocumentationForSuite(final ClassOrInterfaceDeclaration classOrInterfaceDeclaration, final String possibleAuthor,
-                                                final String possibleAuthorsEmail) {
+    private static String generateDocumentationForSuite(final ClassOrInterfaceDeclaration classOrInterfaceDeclaration, final String authorOfClass,
+                                                final String authorsEmailClass) {
         final String codeSnippet = classOrInterfaceDeclaration.toString();
         final String javadoc = classOrInterfaceDeclaration.getJavadocComment().isPresent() ? classOrInterfaceDeclaration.getJavadocComment().toString() : "";
         // Fetch tags from the class and method level
@@ -227,7 +227,7 @@ public class JavadocGenerator {
             "The annotation should document the class method's purpose, steps only in @BeforeAll,@AfterAll methods if exists, use cases, and tags in a structured way that aligns with Java syntax rules. \n:\n" +
             "Class Signature:\n" + codeSnippet + "\n\n" +
             "EBNF Grammar:\n" + EBNF_GRAMMAR_OF_CLASS + "\n" +
-            "Include the possible author as @Contact: " + possibleAuthor + " (" + possibleAuthorsEmail + ")\n" +
+            "Include author as @Contact!: " + authorOfClass + " (" + authorsEmailClass + ")\n" +
             "Include at least one @TestTag inside tags and consider these inherited tags (upper case always): " + classTagString + "\n" +
             "Use only this in Before test steps as inspiration! If empty let it be:\n" + beforeAllMethods + "\n" +
             "Use only this in After test steps as inspiration! If empty let it be:\n" + afterAllMethods + "\n" +
