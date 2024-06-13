@@ -2,8 +2,11 @@ package io.see.quick.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GitUtils {
 
@@ -84,6 +87,14 @@ public class GitUtils {
     public static String[] getMostFrequentSigner(String filePath, int startLine, int endLine) {
         String[] mostFrequentSigner = new String[2]; // Array to hold the most frequent signer name and email
         Map<String, Integer> signerCounts = new HashMap<>();
+
+        // Retrieve excluded emails from environment variable
+        String excludedEmailsEnv = System.getenv("EXCLUDED_EMAILS");
+        Set<String> excludedEmails = new HashSet<>();
+        if (excludedEmailsEnv != null && !excludedEmailsEnv.isEmpty()) {
+            excludedEmails.addAll(Arrays.asList(excludedEmailsEnv.split(",")));
+        }
+
         try {
             // Construct the command
             String command = String.format("git log -L %d,%d:%s --pretty=fuller", startLine, endLine, filePath);
@@ -96,7 +107,10 @@ public class GitUtils {
             while ((line = reader.readLine()) != null) {
                 if (line.contains("Signed-off-by")) {
                     String signer = line.substring(line.indexOf("Signed-off-by:") + "Signed-off-by:".length()).trim();
-                    signerCounts.put(signer, signerCounts.getOrDefault(signer, 0) + 1);
+                    // Exclude signers based on environment variable
+                    if (!excludedEmails.contains(signer.split("<")[1].replace(">", "").trim())) {
+                        signerCounts.put(signer, signerCounts.getOrDefault(signer, 0) + 1);
+                    }
                 }
             }
             process.waitFor(); // Wait for the process to complete
